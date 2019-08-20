@@ -1,0 +1,586 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>列表页面</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/extract/log")
+
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<form
+						class="layui-form layui-card-header layuiadmin-card-header-auto"
+						id="form-search">
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<label class="layui-form-label">手机号</label>
+								<div class="layui-input-block">
+									<input type="text" name="mobile" value="#(mobile)"
+										placeholder="请输入搜索关键词" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">昵称</label>
+								<div class="layui-input-block">
+									<input type="text" name="nick" value="#(mobile)"
+										placeholder="请输入搜索关键词" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+
+							<div class="layui-inline">
+								<label class="layui-form-label">状态</label>
+								<div class="layui-input-inline">
+									<select name="state">
+										<option value="-1" #if(state== -1) selected #end>全部</option>
+										<option value="0" #if(state== 0) selected #end>待审核</option>
+										<option value="1" #if(state== 1) selected #end>通过</option>
+										<option value="2" #if(state== 2) selected #end>未通过</option>
+									</select>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<label class="layui-form-label">选择提现时间范围</label>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="applyStartTime"
+											name="applyStartTime" value="#(applyStartTime)" placeholder="开始日期">
+									</div>
+									<div class="layui-form-mid">-</div>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="applyEndTime"
+											name="applyEndTime" value="#(applyEndTime)" placeholder="结束日期">
+									</div>
+								</div>
+							</div>
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<label class="layui-form-label">选择审核时间范围</label>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="examineStartTime"
+											name="examineStartTime" value="#(examineStartTime)" placeholder="开始日期">
+									</div>
+									<div class="layui-form-mid">-</div>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="examineEndTime"
+											name="examineEndTime" value="#(examineEndTime)" placeholder="结束日期">
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="layui-card-body">
+						<div style="padding-bottom: 10px;">
+							<div class="layui-btn-group table-operate-btn">
+								<!-- <a class="layui-btn layui-btn-normal" lay-text="新增商品"
+									lay-href="#(curl)/add">新增</a> -->
+								<button class="layui-btn layui-btn-danger" onclick="batchAgree();">批量通过</button>
+								<a class="layui-btn layui-btn-normal" href="#(curl)/export">导出当前表格</a>
+								<button class="layui-btn " data-type="search">
+									<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+								</button>
+							</div>
+						</div>
+
+						<form class="layui-form" id="tf">
+							<table class="layui-table" id="table-data">
+								<colgroup>
+									<col width="10">
+									<col width="50">
+									<col width="150">
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input type="checkbox" lay-skin="primary"
+											lay-filter="allChoose"></th>
+										<th>ID</th>
+										<th>手机号</th>
+										<th>昵称</th>
+										<th>持卡人姓名</th>
+										<th>银行名称</th>
+										<th>开户行</th>
+										<th>银行卡号</th>
+										<th>提现金额</th>
+										<th>提现状态</th>
+										<th>申请时间</th>
+										<th>审核时间</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									#for(obj : page.list)
+									<tr ng-repeat="obj in list">
+										<td><input type="checkbox" lay-skin="primary" name="ids"
+											value="#( obj.id)"></td>
+										<td>#(obj.id)</td>
+										<td>#(obj.mobile)</td>
+										<td>#(obj.nick)</td>
+										<td>#(obj.bankUser)</td>
+										<td>#(obj.bankName)</td>
+										<td>#(obj.bankBranch)</td>
+										<td>#(obj.bankNumber)</td>
+										<td>#(obj.amount)</td>
+										<td>#if(obj.state == 0)待审核#else if(obj.state == 1)通过 #else 未通过#end</td>
+										<td>#(obj.createTime)</td>
+										<td>#(obj.examineTime)</td>
+										<td>
+											#if(obj.state == 0)
+											<button type="button"
+												class="layui-btn layui-btn-danger layui-btn-xs"
+												onclick="agree(#(obj.id));">同意</button>
+											<button type="button"
+												class="layui-btn layui-btn-normal layui-btn-xs"
+												onclick="refuse(#(obj.id));">拒绝</button>
+											#else
+											#(obj.reason)
+											#end
+										</td>
+									</tr>
+									#end
+								</tbody>
+							</table>
+							#set(currentPage = page.pageNumber) 
+							#set(totalRow = page.totalRow) 
+							#set(pageSize = page.pageSize) 
+							#set(actionUrl = curl+"/page/") 
+							#set(urlParas = parameter)
+							<div class="layui-card">
+								<div class="layui-card-body">
+									<div id="page"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'table','laydate' ],function() {
+			var admin = layui.admin, table = layui.table, setter = layui.setter, form = layui.form,laypage = layui.laypage,laydate = layui.laydate;
+			
+			var applyStartTime = laydate.render({
+      			elem: '#applyStartTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			applyStartTime.config.min = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				applyEndTime.config.elem[0].focus();
+      			}
+   		 	});
+			var applyEndTime = laydate.render({
+      			elem: '#applyEndTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			applyEndTime.config.max = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				//insEnd.config.elem[0].focus();
+      			}
+   		 	});
+			var examineStartTime = laydate.render({
+      			elem: '#examineStartTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			examineStartTime.config.max = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				examineEndTime.config.elem[0].focus();
+      			}
+   		 	});
+			var examineEndTime = laydate.render({
+      			elem: '#examineEndTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			examineEndTime.config.max = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				//insEnd.config.elem[0].focus();
+      			}
+   		 	});
+
+
+			laypage.render({
+				elem: 'page',
+			    count: #(totalRow),
+			    curr: #(currentPage),
+			    limit:20,
+			    layout: ['count', 'prev', 'page', 'next',  'skip'],
+			    jump: function(obj, first){
+			    	if (!first) {
+			    		location.href = '#(actionUrl)'+obj.curr+'#(urlParas)';
+			    	 }
+			    }
+			});
+
+			form.on('checkbox(allChoose)', function(data){
+				var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');		    
+				child.each(function(index, item){		      
+					item.checked = data.elem.checked;		  
+				});		    
+				form.render('checkbox');		
+			});
+
+			//监听表格复选框选择
+			table.on('checkbox(table-data)', function(obj) {
+				console.log(obj);
+			});
+
+			var $ = layui.$, active = {
+				dels : function() { //批量删除
+					layer.confirm('真的吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/dels",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				fzs : function() { //批量下架
+					layer.confirm('确定批量下架吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/fzs",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				unfzs : function() { //批量上架
+					layer.confirm('确定批量上架吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/unfzs",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				setHot : function() { //批量设置热门
+					layer.confirm('确定批量设置为热门商品吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/setHots?state=1",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				unHot : function() { //批量取消热门商品
+					layer.confirm('确定批量取消热门商品吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/setHots?state=0",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				setRecommend : function() { //批量设置推荐商品
+					layer.confirm('确定批量设置推荐商品吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/setRecommend?state=1",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				unRecommend : function() { //批量取消推荐商品
+					layer.confirm('确定批量取消推荐商品吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/setRecommend?state=0",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				search : function() { //搜索
+					var field = $("#form-search").serialize();
+					location.href = '#(curl)/page?'+field;
+				}
+			};
+
+			$('.table-operate-btn .layui-btn').on('click',function() {
+				var type = $(this).data('type');
+				active[type] ? active[type].call(this): '';
+			});
+			
+		});
+		//拒绝提现
+		function refuse(id){
+  			 	layer.open({
+  			        type: 1
+  			        ,title: '拒绝理由'
+  			        ,area:['500px', '300px']
+  			        ,content: '<textarea id="reason" style="width: 500px; height: 200px; resize:none;"/>'
+  			        ,btn: '提交'
+  			        ,btnAlign: 'c' //按钮居中
+  			        ,shade: 0 //不显示遮罩
+  			        ,yes: function(){
+  			        	$.ajax({  
+  			 	     	   type : "post",  
+  			 	    	   url : "#(curl)/refuse", 
+  			 	    	   data : {"extractLogId":id,"reason":$('#reason').val()},
+  			 	   	  	   async : true,  
+  			 	   		   success : function(data){
+  			 	   			   console.log(data)
+  			 	   			   if(data.code == 2){
+  			 	   					location.href = '#(ctx)/system/toLogin';
+  			 		           }else if(data.code == 0){
+  			 		        		parent.layer.msg(data.desc,{offset:'80%'});
+  			 		           }else if(data.code == 1){
+  			 		        		window.location.reload();
+  			 		        	}
+  			 	           },
+  			 	      	});
+  			        } 
+  			      });
+  			}
+		//同意提现
+		function agree(id){
+			layer.confirm('确认同意吗',function(index) {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/agree",
+					data : 'extractLogId='+ id,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.close(index);
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.close(index);
+						layer.closeAll('loading');
+					}
+				});
+			});
+			}
+		//批量同意
+		function batchAgree(){
+			layer.confirm('确定批量同意吗？',function(index) {
+				layer.close(index);
+				$.ajax({
+					type : "post",
+					url : "#(curl)/batchAgree",
+					data : $("#tf").serialize(),  
+					async : true,
+					beforeSend : function(request) {
+						layer.load(2);
+					},
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.closeAll('loading');
+					}
+				});
+			});
+		}
+		//下架
+		function del(id,msg){
+			layer.confirm(msg,function(index) {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/fz",
+					data : 'id='+ id,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.close(index);
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.close(index);
+						layer.closeAll('loading');
+					}
+				});
+			});
+		};	
+		function deleteGoods(id,msg){
+			layer.confirm(msg,function(index) {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/deleteGoods",
+					data : 'id='+ id,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.close(index);
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.close(index);
+						layer.closeAll('loading');
+					}
+				});
+			});
+		};	
+	</script>
+</body>
+</html>

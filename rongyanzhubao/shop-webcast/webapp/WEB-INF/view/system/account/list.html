@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>用户列表</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	<div>
+		<input type="hidden" id="curl" value="#(curl)">
+		<input type="hidden" id="ctx" value="#(ctx)">
+		<input type="hidden" id="menuId" value="#(menuId)">
+	</div>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<div
+						class="layui-form layui-card-header layuiadmin-card-header-auto">
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<label class="layui-form-label">手机号名称</label>
+								<div class="layui-input-inline">
+									<input type="text" width="300px" name="mobile" placeholder=""
+										autocomplete="off" class="layui-input">
+								</div>
+								<div class="layui-inline">
+				                  <label class="layui-form-label">选择注册时间范围</label>
+				                  <div class="layui-input-inline">
+				                    <input type="text" class="layui-input" id="account-startTime" name="startTime" placeholder="开始日期">
+				                  </div>
+				                  <div class="layui-form-mid">
+				                    -
+				                  </div>
+				                  <div class="layui-input-inline">
+				                    <input type="text" class="layui-input" id="account-endTime" name="endTime" placeholder="结束日期">
+				                  </div>
+				                </div>
+				                <label class="layui-form-label">昵称</label>
+								<div class="layui-input-inline">
+									<input type="text" width="300px" name="nick" placeholder=""
+										autocomplete="off" class="layui-input">
+								</div>
+								
+								<label class="layui-form-label">用户类型</label>
+								<div class="layui-input-inline">
+									<select name="type">
+										<option value="">全部</option>
+										<option value="0">管理员</option>
+										<option value="1">普通用户</option>
+										<option value="2">商家</option>
+										<option value="3">主播</option>
+										<option value="4">房管</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">冻结状态</label>
+								<div class="layui-input-inline">
+									<select name="state">
+										<option value="">全部</option>
+										<option value="1">冻结</option>
+										<option value="0">正常</option>
+									</select>
+							</div>
+						</div>
+
+
+						<div class="layui-form-item">
+
+							<div class="layui-inline">
+								<button class="layui-btn layui-btn-normal layuiadmin-btn-list"
+									lay-submit lay-filter="LAY-account-search">
+									<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+								</button>
+
+								<button class="layui-btn layui-btn-normal layuiadmin-btn-list"
+									lay-submit lay-filter="LAY-account-refresh">
+									<i class="layui-icon layui-icon-refresh  layuiadmin-button-btn"></i>
+								</button>
+								
+								<a class="layui-btn layui-btn-normal add" >新增</a>
+								
+							    <button class="layui-btn layui-btn-normal batchFz" >批量冻结</button>
+								
+								<button class="layui-btn layui-btn-normal batchUfz" >批量解冻</button> 
+								
+								<a class="layui-btn layui-btn-normal export" href="#(ctx)/system/account/exportAccountList">导出数据</a>
+							</div>
+						</div>
+
+					</div>
+					<form class="layui-form" id="LAY-role-form">
+						<table class="layui-hide" id="account-table" lay-filter="account-table">
+						</table>
+					</form>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	
+
+
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index'
+		}).use([ 'index', 'table', 'account' ], function() {
+			var $ = layui.jquery;
+			var table = layui.table;
+			var layer = layui.layer;
+		});
+	</script>
+
+</body>
+</html>

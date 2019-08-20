@@ -1,0 +1,57 @@
+
+<input type="hidden" name="menu.id" value="#(menu.id)" />
+<div class="layui-form-item">
+	<label class="layui-form-label">父菜单</label>
+	<div class="layui-input-block">
+		<select name="menu.parent"> #if(parentMenu != null)
+			<option value="#(parentMenu.id)">#(parentMenu.name)</option> #end
+			<option value="-1">顶级菜单</option> #for(obj1 : menuList)
+			<option value="#(obj1.id)">#(obj1.name)</option> #for(obj2 :
+			obj1.nextList)
+			<option value="#(obj2.id)">&nbsp;&nbsp;&nbsp;&nbsp;#(obj2.name)</option>
+			#end #end
+		</select>
+	</div>
+</div>
+<div class="layui-form-item">
+	<label class="layui-form-label">名称</label>
+	<div class="layui-input-block">
+		<input type="text" name="menu.name" value="#(menu.name)"
+			vlay-verify="title" autocomplete="off" placeholder="请输入标题"
+			class="layui-input" datatype="*2-100" errormsg="昵称至少6个字符,最多18个字符！">
+	</div>
+</div>
+<div class="layui-form-item">
+	<label class="layui-form-label">路径</label>
+	<div class="layui-input-block">
+		<input type="text" name="menu.url" value="#(menu.url)"
+			lay-verify="title" autocomplete="off" placeholder="请输入路径"
+			class="layui-input">
+	</div>
+</div>
+<div class="layui-form-item">
+	<div class="layui-inline">
+		<label class="layui-form-label">排序</label>
+		<div class="layui-input-block">
+			<input type="text" name="menu.sort" value="#(menu.sort ?? 0)"
+				lay-verify="title" autocomplete="off" placeholder="请输入排序"
+				class="layui-input" datatype="*2-100">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">icon</label>
+		<div class="layui-input-block">
+			<input type="text" name="menu.icon" value="#(menu.icon)"
+				lay-verify="title" autocomplete="off" placeholder="请输入icon"
+				class="layui-input">
+		</div>
+	</div>
+</div>
+
+<div class="layui-form-item">
+	<label class="layui-form-label">描述</label>
+	<div class="layui-input-block">
+		<textarea name="menu.desc" value="#(menu.desc)" placeholder="请输入描述"
+			class="layui-textarea"></textarea>
+	</div>
+</div>

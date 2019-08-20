@@ -1,0 +1,157 @@
+
+.layui-table-cell{
+		 height: 100%;
+	}
+.canClick{
+	color:#38f
+}
+
+.Lay-order-img span.goodsName p {
+	width: 100%;
+	line-height: 24px;
+}
+.Lay-order-img img{
+	display:inline-block;
+}
+.green{
+	color:green;
+}
+.red{
+color:red
+}
+.blue{
+	color:blue
+}
+.stateButton{
+		display: flex;
+	    flex-wrap: wrap;
+	    align-items: center;
+	    justify-content: center;
+}
+
+.upload-img-wrap {
+	width: 90px;
+	margin-right: 10px;
+}
+
+.upload-img-wrap .rc-upload
+	{
+	width: 200px;
+	height: 200px;
+	padding: 3px;
+	border: 1px solid #dcdcdc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	background-color: #fff
+}
+
+.upload-img-wrap .rc-upload:hover span.detele
+	{
+	display: inline-block
+}
+
+.upload-img-wrap .rc-upload span.detele
+	{
+	display: none;
+	position: absolute;
+	top: -9px;
+	right: -9px;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
+	line-height: 16px;
+	font-size: 14px;
+	background: rgba(153, 153, 153, 0.6);
+	border-radius: 50%;
+	z-index: 10
+}
+
+.upload-img-wrap .rc-upload i.jia
+	{
+	font-weight: bold;
+	font-size: 30px;
+	font-style: normal;
+	color: #ddd
+}
+
+.upload-img-wrap .rc-upload i.img
+	{
+	position: absolute;
+	display: inline-block;
+	width: 200px;
+	height: 200px;
+	margin: 0 auto;
+	line-height: 84px;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #fff;
+	z-index: 3
+}
+
+.upload-img-wrap .rc-upload input
+	{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+	z-index: 9
+}
+
+
+
+
+
+
+
+
+
+
+
+.freight span {
+    color: #38f;
+    cursor: pointer;
+}
+.left-img{
+	display:inline-block;
+}
+.left-img img{
+	display:block;
+}
+.ccc-box {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.layui-table-cell {
+            height: auto;
+            line-height: 100px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

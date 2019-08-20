@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/shopSort.css" />
+  <link rel="stylesheet" href="./css/init.css" />
+  <title>容妍珠宝</title>
+</head>
+<body>
+  <div class="container">
+    <div class="sort-head">
+      <i @click="goback"></i>
+      <span>款式选择</span>
+    </div>
+    <div class="sort-body">
+      <div class="sort-left">
+        <span @click="chooseTab(indexs)" :class="[index == indexs  && 'active']" v-for="(item, indexs) in sortList" :key="indexs">
+          {{item.name}}
+        </span>
+      </div>
+      <div class="sort-right">
+        <a :href="'search.html?name=' + item.name" v-for="(item, indexs) in nextList">
+          <div class="sort-item">
+            <img :src="item.image">
+            <p>{{item.name}}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./js/rem.js"></script>
+<script src="./js/url.js"></script>
+<script src="./js/axios.js"></script>
+<script src="./js/vue.min.js"></script>
+<script type="text/javascript">
+  const vm = new Vue({
+    el: '.container',
+    data() {
+      return {
+        index: 0,
+        sortList: [],
+        nextList: []
+      }
+    },
+    methods: {
+      goback(){
+        window.history.back(-1);
+      },
+      chooseTab(num) {
+        this.index = num
+        this.nextList = this.sortList[num].nextList
+      },
+      getList(){
+        let that = this
+        axios.post('/api/goods/goodsLabel'
+        ).then(function(res) {
+          console.log(res.data, '商品');
+          if(res.data.code == 1){
+            that.sortList = res.data.data
+            that.nextList = that.sortList[that.index].nextList
+          }
+        })
+      }
+    },
+    mounted() {
+      axios.defaults.baseURL = baseUrl;
+      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+      this.getList()
+    }
+  })
+</script>
+</html>

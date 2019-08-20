@@ -1,0 +1,67 @@
+JFinal 自身对第三方无依赖，但当需要第三方功能支持时则需要添加相应的 jar 文件
+
+支持文件上传功能
+cos-26Dec2008.jar 
+
+支持 mysql 数据库
+mysql-connector-java-5.1.20-bin.jar 
+
+数据库连接池 c3p0
+c3p0-0.9.5.1.jar、mchange-commons-java-0.2.10.jar 
+
+json 操作工具 fastjson
+fastjson-1.2.6.jar 
+
+支持 EhCache，
+ehcache-core-2.5.2.jar、slf4j-api-1.6.1.jar、slf4j-log4j12-1.6.1.jar 
+   在使用EhCache时需要有ehcache.xml文件
+
+log4j-1.2.16.jar 支持 log4j 日志，当此文件不存在时，自动切换至 JDK Logger，
+   注意，log4j需要相应的配置文件 log4j.properties，否则当log4j-1.2.16.jar 存在
+   而log4j.properties 不存在时无日志输出。jdk logger 需要的logging.properties文件
+   也在此目录下提供了
+
+
+   支持JSP标准标签库：JSTL(JSP Standard Tag Library) 
+javax.servlet.jsp.jstl-1.2.0.v201105211821.jar 与 
+org.apache.taglibs.standard.glassfish-1.2.0.v201112081803.jar
+
+mail邮件
+javax.mail-1.5.4.jar
+
+
+百度ueditor
+ueditor-1.1.2.jar
+
+定时器quartz
+quartz-2.2.1.jar
+quartz-jobs-2.2.1.jar
+
+百度ueditor
+commons-codec-1.9.jar
+commons-fileupload-1.3.1.jar
+commons-io-2.4.jar
+json.jar
+ueditor-1.1.2.jar
+
+email
+javax.mail.jar
+
+支付宝支付
+alipay-sdk-java.jar
+dom4j-1.6.1.jar
+commons.httpclient-3.1.0.jar
+
+shiro的jar包
+shiro-core-1.3.2.jar
+shiro-web-1.3.2.jar
+
+lucene
+ansj_seg-1.4.jar中文分词器用于全文检索
+lucene-core-6.3.0.jar
+
+html过滤等
+jsoup-1.9.2.jar
+
+地理位置计算,用于附近
+spatial4j-0.7

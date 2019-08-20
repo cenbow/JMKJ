@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="spec.id" value="#(spec.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<!-- <div class="layui-form-item" hidden>
+		<label class="layui-form-label">商品模型</label>
+		<div class="layui-input-block">
+			<select name="spec.shopMdId">
+				#for(mobj : mdList)
+		        <option value="#(mobj.id)" #if(spec.shopMdId == mobj.id)selected #end >#(mobj.name)</option>
+		        #end
+		    </select>
+		</div>
+	</div> -->
+	<div class="layui-form-item" hidden>
+		<label class="layui-form-label">规格名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="spec.value" value="规格名称" lay-verify="title" autocomplete="off" placeholder="请输入名称" class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">参数名称</label>
+		<div id = "specAttrs">
+			#if(specAttrs == null || specAttrs.isEmpty())
+			<div class="layui-input-block">
+				<div class="layui-form-item">
+					<div class="layui-input-inline" style="width: 500px;">
+						<input type="text" name="attrs" value="" placeholder="请输入参数名称" class="layui-input spec" id="test-colorpicker-form-input" datatype="*">
+					</div>
+				</div>
+			</div>
+			#end
+			#for(attrObj : specAttrs)
+				<div class="layui-input-block" >
+				<div class="layui-form-item">
+					<input type = "hidden" name ="attrsId" value="#(attrObj.id ??)">
+					<div class="layui-input-inline" style="width: 500px;">
+						<input type="text" name="attrs" value="#(attrObj.name ??)" placeholder="请输入参数值"
+							class="layui-input spec" id="test-colorpicker-form-input" datatype="*">
+					</div>
+				</div>
+				</div>
+			#end
+		</div>
+	</div>
+	
+</body>
+
+</html>
+

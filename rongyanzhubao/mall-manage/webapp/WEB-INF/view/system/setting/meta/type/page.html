@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>列表页面</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/meta/type")
+
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<form
+						class="layui-form layui-card-header layuiadmin-card-header-auto"
+						id="form-search">
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<label class="layui-form-label">ID</label>
+								<div class="layui-input-block">
+									<input type="text" name="id" value="#(id)" placeholder="请输入ID"
+										autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<label class="layui-form-label">关键词</label>
+								<div class="layui-input-block">
+									<input type="text" name="keyword" value="#(keyword)"
+										placeholder="请输入搜索关键词" autocomplete="off" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-inline">
+								<div class="layui-inline">
+									<label class="layui-form-label">创建时间</label>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="startTime"
+											name="startTime" value="#(startTime)" placeholder="开始日期">
+									</div>
+									<div class="layui-form-mid">-</div>
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="endTime"
+											name="endTime" value="#(endTime)" placeholder="结束日期">
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="layui-card-body">
+						<div style="padding-bottom: 10px;">
+							<div class="layui-btn-group table-operate-btn">
+								<a class="layui-btn layui-btn-normal"
+									lay-href="#(curl)/add">新增</a>
+								<button class="layui-btn layui-btn-danger" data-type="dels">批量删除</button>
+								<button class="layui-btn " data-type="search">
+									<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+								</button>
+							</div>
+						</div>
+
+						<form class="layui-form" id="tf">
+							<table class="layui-table" id="table-data">
+								<colgroup>
+									<col width="10">
+									<col width="50">
+									<col width="150">
+									<col width="200">
+									<col width="200">
+									<col>
+									<col width="250">
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input type="checkbox" lay-skin="primary"
+											lay-filter="allChoose"></th>
+										<th>ID</th>
+										<th>no</th>
+										<th>名称</th>
+										<th>创建时间</th>
+										<th>描述</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									#for(obj : page.list)
+									<tr ng-repeat="obj in list">
+										<td><input type="checkbox" lay-skin="primary" name="ids"
+											value="#( obj.id)"></td>
+										<td>#(obj.id)</td>
+										<td>#(obj.no)</td>
+										<td>#(obj.name)</td>
+										<td>#(obj.createTime)</td>
+										<td>#(obj.desc)</td>
+										<td>
+											<a class="layui-btn layui-btn-xs" lay-href="#(curl)/edit?id=#(obj.id)">编辑</a>
+											<button type="button" class="layui-btn layui-btn-danger layui-btn-xs" onclick="del(#(obj.id));">删除</button>
+											<a class="layui-btn layui-btn-xs" lay-href="#(ctx)/system/meta/page?metaTypeId=#(obj.id)">数据管理</a>
+										</td>
+									</tr>
+									#end
+								</tbody>
+							</table>
+							#set(currentPage = page.pageNumber) #set(totalRow =
+							page.totalRow) #set(pageSize = page.pageSize) #set(actionUrl =
+							curl+"/page/") #set(urlParas = parameter)
+							<div class="layui-card">
+								<div class="layui-card-body">
+									<div id="page"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'table','laydate' ],function() {
+			var admin = layui.admin, table = layui.table, setter = layui.setter, form = layui.form,laypage = layui.laypage,laydate = layui.laydate;
+			
+			//开始日期
+			var insStart = laydate.render({
+      			elem: '#startTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			insEnd.config.min = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				insEnd.config.elem[0].focus();
+      			}
+   		 	});
+			//结束日前
+			var insEnd = laydate.render({
+      			elem: '#endTime',
+      			min: '1949-01-01',
+      			done: function(value, date){
+        			//更新结束日期的最小日期
+        			insEnd.config.max = lay.extend({}, date, {
+          				month: date.month - 1
+        			});
+       				 //自动弹出结束日期的选择器
+       				insEnd.config.elem[0].focus();
+      			}
+   		 	});
+
+
+			laypage.render({
+				elem: 'page',
+			    count: #(totalRow),
+			    curr: #(currentPage),
+			    limit:20,
+			    layout: ['count', 'prev', 'page', 'next',  'skip'],
+			    jump: function(obj, first){
+			    	if (!first) {
+			    		location.href = '#(actionUrl)'+obj.curr+'#(urlParas)';
+			    	 }
+			    }
+			});
+
+			form.on('checkbox(allChoose)', function(data){
+				var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');		    
+				child.each(function(index, item){		      
+					item.checked = data.elem.checked;		  
+				});		    
+				form.render('checkbox');		
+			});
+
+			//监听表格复选框选择
+			table.on('checkbox(table-data)', function(obj) {
+				console.log(obj);
+			});
+
+			var $ = layui.$, active = {
+				dels : function() { //批量删除
+					layer.confirm('真的吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/dels",
+							data : $("#tf").serialize(),  
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				search : function() { //搜索
+					var field = $("#form-search").serialize();
+					location.href = '#(curl)/page?'+field;
+				}
+			};
+
+			$('.table-operate-btn .layui-btn').on('click',function() {
+				var type = $(this).data('type');
+				active[type] ? active[type].call(this): '';
+			});
+			
+		});
+		
+		//删除
+		function del(id){
+			layer.confirm('确定删除么',function(index) {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/delete",
+					data : 'id='+ id,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.close(index);
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.close(index);
+						layer.closeAll('loading');
+					}
+				});
+			});
+		};	
+	</script>
+</body>
+</html>

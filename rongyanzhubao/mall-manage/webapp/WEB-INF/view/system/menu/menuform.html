@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>菜单表单</title>
+
+#include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+
+	<div class="layui-form" lay-filter="LAY-form-menu"
+		id="LAY-form-menu" style="padding: 20px 0 0 0;">
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">菜单名</label>
+				<div class="layui-input-inline">
+				<input type="text" name="menu.name" lay-verify="required"
+					placeholder="请输菜单名" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">菜单路径</label>
+				<div class="layui-input-inline">
+				<input type="text" name="menu.url"
+					placeholder="菜单路径" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">菜单排序</label>
+				<div class="layui-input-inline">
+				<input type="number" name="menu.sort" 
+					placeholder="菜单排序" autocomplete="off" class="layui-input">
+				<input type="hidden" name="menu.parent" value= "#(menu.parent ?? 0)" lay-verify="required" class="layui-input">
+				#(token)
+			</div>
+		</div>
+		
+		
+		<div class="layui-form-item layui-hide">
+			<button class="layui-btn" lay-submit
+				lay-filter="LAY-menu-submit" id="LAY-menu-submit">提交</button>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+		
+		
+	<script>
+	  layui.config({
+		  base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+	  }).extend({
+	    index: 'lib/index' //主入口模块
+	  }).use(['index', 'form'], function(){
+	    var $ = layui.$
+	    ,form = layui.form ;
+	  })
+  </script>
+</body>
+</html>

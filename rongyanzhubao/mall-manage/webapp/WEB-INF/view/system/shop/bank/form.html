@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="bank.id" value="#(bank.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">银行名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="bank.name" value="#(bank.name)"
+				lay-verify="title" autocomplete="off" placeholder="请输入银行名称"
+				class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>添加页面</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/goods")
+	
+	<input type="hidden" value="#(menuId)" id = "menuId">
+	<input type="hidden" value="#(curl)" id = "curl">
+
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body" style="padding: 15px;">
+				<form class="layui-form" action="" lay-filter="component-form-group" enctype="multipart/form-data"
+					id="form">
+					#include("/WEB-INF/view/system/shop/goods/form.html")</form>
+				<div class="layui-form-item layui-layout-admin">
+					<div class="layui-input-block">
+						<div class="layui-footer" style="left: 0;">
+							<button class="layui-btn " id="submit">立即提交</button>
+							<button data-type="reset" type="reset"
+								class="layui-btn layui-btn-primary">重置</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		var addImageHtml = `<div class="fileinput fileinput-new" data-provides="fileinput">
+					<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+						<img src="#(ctx)/assets/img/no.png" alt="" />
+					</div>
+					<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+					<div>
+						<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span> <input type="file" name="inputNmae">
+						</span> <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 删除图片 </a>
+						<a href="javascript:;" class="btn red" onclick="deleteImageDiv(this,'subtractName','deleteImageId')"> 删除</a>
+					</div>
+				</div>`;
+		var detailImageHtml = `<input name="detailImageNames" id="inputNmae" value="inputNmae" />`;
+		var goodsImageHtml = `<input name="goodsImageNames" id="inputNmae" value="inputNmae" />`;
+		var strA = 'a';
+		var num = 0;
+		var detailImageNum = 0;
+		var goodsImageNum = 0;
+		function addImageDiv(imageId){
+			var inputName = strA + (++num);
+			var imageHtml = addImageHtml;
+			if(imageId === 'detailImage'){
+				if(detailImageNum > 11){
+					parent.layer.msg("商品详情图最多12张",{offset:'80%'});
+					return;
+				}
+				var html = detailImageHtml.replace("inputNmae",inputName).replace("inputNmae",inputName);
+				$(html).appendTo($("#detailImageIds"));
+				++detailImageNum;
+				imageHtml = imageHtml.replace("deleteImageId",inputName).replace("subtractName","detailImage");
+			}else if(imageId === 'goodsImage'){
+				if(goodsImageNum > 4){
+					parent.layer.msg("商品主图最多5张",{offset:'80%'});
+					return;
+				}
+				var html = goodsImageHtml.replace("inputNmae",inputName).replace("inputNmae",inputName);
+				$(html).appendTo($("#goodsImageIds"));
+				++goodsImageNum;
+				imageHtml = imageHtml.replace("deleteImageId",inputName).replace("subtractName","goodsImage");
+			}
+			imageHtml = imageHtml.replace("inputNmae",inputName);
+			$(imageHtml).appendTo($("#"+imageId));
+		}
+		
+		function deleteImageDiv(a, imageId, detailImageId){
+			if(imageId === ''){
+				
+			}else if(imageId === 'detailImage'){
+				--detailImageNum;
+			}else if(imageId === 'goodsImage'){
+				--goodsImageNum;
+			}
+			$("#"+detailImageId).remove();
+			$(a).parent().parent().remove();
+		}
+		
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'form', 'laydate', 'upload', 'addGoods'],function() {
+			var $ = layui.$, admin = layui.admin, element = layui.element, layer = layui.layer, laydate = layui.laydate, form = layui.form,upload = layui.upload;
+		    form.on('switch(goodsState)', function(data){
+		        if(data.elem.checked) {
+					$("#goodsState").val(0);
+		        }else {
+		        	$("#goodsState").val(1);
+		        }
+			});
+		    upload.render({
+		        elem: '#videoFile' //绑定元素
+		        ,url: '#(curl)/uploadVideo' //上传接口
+		        ,field: "videoFile"
+		        ,accept: "video"
+		        ,done: function(res){
+					$("#video").attr("src", res.data);
+					$("#goodsVideoName").val(res.data);
+		        }
+		        ,error: function(){
+		          //请求异常回调
+		        }
+	         });
+		    
+		});
+	</script>
+</body>
+</html>

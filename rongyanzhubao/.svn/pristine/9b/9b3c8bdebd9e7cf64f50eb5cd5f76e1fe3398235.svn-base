@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/details.css" />
+  <link rel="stylesheet" href="./css/init.css" />
+  <title>容妍珠宝</title>
+
+</head>
+<body>
+  <div class="container">
+    <video class="video" controls="controls" :src="details.video" autoplay></video>
+
+    <div class="detail-box">
+      <div class="datail-price">
+        ¥{{details.price}}<span>批发价</span>
+      </div>
+      <p class="content">{{details.name}}</p>
+    </div>
+
+    <div class="detail-list-box">
+      <h1> — 商品详情 — </h1>
+      <div class="detail-list">
+        <p v-for="(item, index) in details.skuList" :key="index">{{item.skuCode}}<i>{{item.name}}</i></p>
+      </div>
+      <div class="detail-img-list">
+        <img :src="item.image" v-for="(item, index) in details.detailsList" :key="index">
+      </div>
+    </div>
+
+    <div class="detail-position">
+      <button type="button" name="button">立即购买</button>
+    </div>
+
+  </div>
+</body>
+<script src="./js/rem.js"></script>
+<script src="./js/url.js"></script>
+<script src="./js/axios.js"></script>
+<script src="./js/vue.min.js"></script>
+<script type="text/javascript">
+  const vm = new Vue({
+    el: '.container',
+    data() {
+      return {
+        details: {},
+      }
+    },
+    methods: {
+      getDetails() {
+        let that = this
+        axios.post('/api/goods/htmlGoodsDetail',
+          new URLSearchParams({goodsId: that.getUrlKey('id'),goodsResaleId: that.getUrlKey('goodsResaleId')})
+        ).then(function(res) {
+          console.log(res.data, '详情');
+          if(res.data.code == 1){
+            that.details = res.data.data
+          }
+        })
+      },
+      getUrlKey(name) {
+        return (
+          decodeURIComponent(
+            (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
+              location.href
+            ) || [, ""])[1].replace(/\+/g, "%20")
+          ) || null
+        );
+      }
+    },
+    mounted() {
+      axios.defaults.baseURL = baseUrl;
+      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+      this.getDetails()
+    }
+  })
+</script>
+</html>

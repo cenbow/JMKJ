@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="keyword.id" value="#(keyword.id)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">关键词</label>
+		<div class="layui-input-block">
+			<input type="text" name="keyword.name" value="#(keyword.name)" vlay-verify="title" autocomplete="off" placeholder="请输入关键词" class="layui-input" #if(action == 2) disabled #end  datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-inline">
+			<label class="layui-form-label">状态</label>
+			<div class="layui-input-block">
+				<input type="radio" name="keyword.state" value="0" title="正常" #if(keyword.state == null || keyword.state == 0) checked #end>
+				<input type="radio" name="keyword.state" value="1" title="冻结" #if(keyword.state == 1) checked #end>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

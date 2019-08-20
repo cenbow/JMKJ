@@ -1,0 +1,99 @@
+table {
+	width: 100%;
+	background-color: #fff;
+	text-align: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 12px
+}
+.w100{
+	width:100px;
+}
+.w150{
+	width:150px;
+}
+
+table thead {
+	border-bottom: 1px solid #e5e5e5;
+	background:#f0f0f0;
+}
+
+table thead tr th {
+	color: #333;
+	font-weight: normal;
+	padding: 8px 8px
+}
+
+table tbody tr {
+	border-bottom: 1px solid #e5e5e5
+}
+
+table tbody tr td {
+	height: 60px;
+	padding: 10px 8px;
+	box-sizing: border-box
+}
+
+.btClass {
+	margin:10px 0px;
+}
+.layui-btn-primary:hover {
+	border-color: #1E9FFF;
+	color: #1E9FFF
+}
+
+ table tbody tr td input {
+	height: 25px;
+	width: 100px;
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	padding: 0 5px;
+	outline: none
+}
+
+ table tbody tr td input[type='number']::-webkit-outer-spin-button
+	{
+	-webkit-appearance: none !important;
+	margin: 0
+}
+
+ table tbody tr td input[type='number']::-webkit-inner-spin-button
+	{
+	-webkit-appearance: none !important;
+	margin: 0
+}
+
+ table tbody tr td input[type="number"] {
+	-moz-appearance: textfield
+}
+
+ table tbody tr td.active {
+	border-bottom: 1px solid #e5e5e5
+}
+
+ table tfoot tr td {
+	padding: 10px 8px 0
+}
+
+ table tfoot tr td span {
+	color: #38f;
+	cursor: pointer
+}
+
+ table tfoot tr td input {
+	width: 100px;
+	height: 30px;
+	padding: 0 5px;
+	outline: none;
+	border-radius: 3px;
+	border: 1px solid #ddd
+}
+
+span.canClick{
+	color:#38f;
+	padding:0 10px 10px 0;
+	font-size:14px;
+	cursor: pointer;
+}
+
+

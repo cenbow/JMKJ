@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>添加页面</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/shop/spec")
+
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body" style="padding: 15px;">
+				<form class="layui-form" action="" lay-filter="component-form-group" enctype="multipart/form-data"
+					id="form">
+					#include("/WEB-INF/view/system/shop/spec/form.html")</form>
+				<div class="layui-form-item layui-layout-admin">
+					<div class="layui-input-block">
+						<div class="layui-footer" style="left: 0;">
+							<button class="layui-btn " id="submit">立即提交</button>
+							<button data-type="reset" type="reset"
+								class="layui-btn layui-btn-primary">重置</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'form', 'laydate', 'upload' ],function() {
+			var $ = layui.$, admin = layui.admin, element = layui.element, layer = layui.layer, laydate = layui.laydate, form = layui.form,upload = layui.upload;
+			
+			$("#submit").click(function(event) {
+				if (valid.check() == false) {
+					return;
+				}
+				if($("#specAttrs").html().trim() === ''){
+					parent.layer.msg("添加属性项",{offset:'80%'});
+					return;
+				}
+				
+				
+				//var field = $("#form").serialize();
+				var formData = new FormData($("#form")[0]);
+				$.ajax({
+					type : 'post',
+					url : "#(curl)/save",
+					data : formData,
+					async : false,
+					processData:false,
+		            contentType:false,
+		            cache: false,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.closeAll('loading');
+					}
+				});
+			 });
+			
+			$("#addItems").click(function(event) {
+				var theOne = '<div class="layui-input-block">'
+							+'<div class="layui-form-item">'
+								+'<div class="layui-input-inline" style="width: 500px;">'
+									+'<input type="text" name="attrs" value="" placeholder="请输入属性值" class="layui-input spec" id="test-colorpicker-form-input" datatype="*">'
+								+'</div>'
+								+'<div class="layui-inline" style="left: -11px;">'
+									+'<i lay-submit lay-filter="addSpec" class="colose_spec layui-icon layui-unselect layui-tab-close">&#x1007;</i>'
+								+'</div>'
+							+'</div>'
+							+'</div>';
+				$("#specAttrs").append(theOne);
+			 });
+			 
+			
+			form.on('submit(addSpec)', function(data){
+				$(this).parent().parent().parent().remove();
+			});
+			
+			/* $(".colose_spec").click(function(event) {
+				$(this).parent().parent().parent().remove();
+			 }); */
+			 
+			 upload.render({
+			      elem: '#test-upload-change',
+			      url: '#(curl)/upload',
+			      auto: false,
+			      bindAction: '#test-upload-change-action',
+			      done: function(data){
+			    	  if (data.code == 1) {
+			    		  var list = data.data.imageList;
+			    		  for(i=0;i<list.size;i++){
+			    			  var img = list[i];
+			    		  	$("#image").val(img);
+			    	  	  	$("#img").attr('src','#(ctx)'+img); 
+			    		  }
+			    	  } else if (data.code == 2) {
+			    		  location.href = '#(ctx)/system/toLogin';
+			    	  }
+			    	  layer.msg(data.desc);
+					  layer.closeAll('loading');
+			      }
+			});
+
+		});
+		
+		
+		
+	</script>
+	
+	
+</body>
+</html>

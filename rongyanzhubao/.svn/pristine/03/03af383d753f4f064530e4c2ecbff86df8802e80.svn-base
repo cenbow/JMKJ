@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>编辑页面</title>
+#include("/WEB-INF/view/system/_common/meta.html")
+<link href="#(ctx)/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="#(ctx)/assets/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+<link href="#(ctx)/assets/bootstrap/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+</head>
+<body>
+	#set(curl = ctx+"/system#url#")
+
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body" style="padding: 15px;">
+				<form class="layui-form" action="" lay-filter="component-form-group" enctype="multipart/form-data" method="post" id="form">
+					<input type="hidden" name="menuId" value="#(menuId)" />
+					#include("/WEB-INF/view/system/#modelName#/form.html")
+					<div class="layui-form-item layui-layout-admin">
+						<div class="layui-input-block">
+							<div class="layui-footer" style="left: 0;">
+								<button type="button" class="layui-btn " type="submit" id="submit">立即提交</button>
+								<a class="layui-btn " onclick="history.go(-1)">返回</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script src="#(ctx)/assets/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+	<script>
+		$(".layui-this" , parent.document).children("span").html('编辑页');
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'form', 'laydate', 'upload' ],function() {
+			var $ = layui.$, admin = layui.admin, element = layui.element, layer = layui.layer, laydate = layui.laydate, form = layui.form,upload = layui.upload;
+			$("#submit").click(function(event) {
+				if (valid.check() == false) {
+					parent.layer.msg("存在错误的填框的信息",{offset:'80%'});
+					return;
+				}
+				var formData = new FormData($("#form")[0]);
+				$.ajax({
+					type : 'post',
+					url : "#(curl)/save",
+					data : formData,
+					async : false,
+					processData:false,
+		            contentType:false,
+		            cache: false,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.href= "#(curl)/page";
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.closeAll('loading');
+					}
+				});
+			 });
+			
+		});
+		
+	</script>
+</body>
+</html>

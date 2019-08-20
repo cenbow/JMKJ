@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="sConfig.id" value="#(sConfig.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	提现配置
+	<div class="layui-form-item">
+		<label class="layui-form-label">MAX额度</label>
+		<div class="layui-input-block">
+			<input type="text" name="sConfig.cashMaxQuota" value="#(sConfig.cashMaxQuota)" vlay-verify="title" autocomplete="off" placeholder="请输入最高提现额度" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">MIN额度</label>
+		<div class="layui-input-block">
+			<input type="text" name="sConfig.cashMinQuota" value="#(sConfig.cashMinQuota)" vlay-verify="title" autocomplete="off" placeholder="请输入最高提现额度" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+</body>
+</html>

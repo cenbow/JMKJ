@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>添加页面</title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/meta")
+
+	<div class="layui-fluid">
+		<div class="layui-card">
+			<div class="layui-card-body" style="padding: 15px;">
+				<form class="layui-form" action="" lay-filter="component-form-group"
+					id="form">
+					#include("/WEB-INF/view/system/setting/meta/form.html")</form>
+				<div class="layui-form-item layui-layout-admin">
+					<div class="layui-input-block">
+						<div class="layui-footer" style="left: 0;">
+							<button class="layui-btn " id="submit">立即提交</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'form', 'laydate', 'upload' ],function() {
+			var $ = layui.$, admin = layui.admin, element = layui.element, layer = layui.layer, laydate = layui.laydate, form = layui.form,upload = layui.upload;
+			
+			$("#submit").click(function(event) {
+				if (valid.check() == false) {
+					return;
+				}
+				var field = $("#form").serialize();
+				$.ajax({
+					type : 'post',
+					url : "#(curl)/save",
+					data : field,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.closeAll('loading');
+					}
+				});
+			 });
+			 
+			 upload.render({
+			      elem: '#test-upload-change',
+			      url: '#(curl)/upload',
+			      auto: false,
+			      bindAction: '#test-upload-change-action',
+			      done: function(data){
+			    	  if (data.code == 1) {
+			    		  
+			    	  } else if (data.code == 2) {
+			    		  location.href = '#(ctx)/system/toLogin';
+			    	  }
+			    	  layer.msg(data.desc);
+					  layer.closeAll('loading');
+			      }
+			});
+
+		});
+	</script>
+</body>
+</html>

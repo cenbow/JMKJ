@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="marketing.id" value="#(marketing.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="marketing.name" value="#(marketing.name)" vlay-verify="title" autocomplete="off" placeholder="请输入名称" class="layui-input" #if(action == 2) disabled #end  datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">图标</label>
+		<div class="layui-input-block">
+			<div class="fileinput fileinput-new" data-provides="fileinput">
+				<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+					<img #if(marketing.image !=null) src="#(marketing.image)"
+				#else src="#(ctx)/assets/img/no.png" #end alt="" />
+				</div>
+				<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+				<div>
+					<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span> <input type="file" name="image">
+					</span> <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 删除 </a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

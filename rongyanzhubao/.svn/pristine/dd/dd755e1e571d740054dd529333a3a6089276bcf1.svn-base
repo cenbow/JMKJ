@@ -1,0 +1,142 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="#(ctx)/style/img.css" type="text/css" rel="stylesheet">
+<title>layuiAdmin 角色管理 iframe 框</title>
+	#include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+
+	<div class="layui-form" 
+		id="layuiadmin-form-img" style="padding: 20px 30px 0 0;">
+	<form id="roomForm" enctype="multipart/form-data">
+		#(token ??)
+		<input type="hidden" name="id" value= "#(room.id ??)" class="layui-input">
+		
+		<div class="layui-form-item">
+		  <label class="layui-form-label">主播手机号</label>
+		  <div class="layui-input-inline">
+		    <input type="text" value="#(room.mobile ??)" name="" lay-verify="required" placeholder="图片名称" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		
+		<div class="layui-form-item">
+		  <label class="layui-form-label">房间id</label>
+		  <div class="layui-input-inline">
+		    <input type="text" disabled="disabled" value="#(room.roomNumber ??)" name="" lay-verify="number" placeholder="数值越大越前面" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		
+		<div class="layui-form-item">
+		     <div class="layui-inline">
+		          <label class="layui-form-label">直播间封面</label>
+		            <div class="layui-input-inline imageBox" style="display:flex;width:auto" >
+					      <div class="upload-img-wrap" > 
+					          <div class="rc-upload">
+					            <input type="file" _val="#(room.image ??)" name="image" class="imageInput" accept="image/jpeg,image/x-png,image/gif">
+					            <span class="detele">x</span>
+					            <i class="jia">+</i>
+					          </div>
+					      </div>
+		            </div>
+		       </div>
+		</div>
+		
+		
+		<div class="layui-form-item">
+		  <label class="layui-form-label">房间名称</label>
+		  <div class="layui-input-inline">
+		    <input type="text" value="#(room.name ??)" style="width: 300px" name="name"  placeholder="" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+         
+         <div class="layui-form-item">
+		  <label class="layui-form-label">房间简介</label>
+		  <div class="layui-input-inline">
+		    <input type="text" value="#(room.desc ??)"  name="desc" style="width: 300px"   autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		
+		<div class="layui-form-item">
+		  <label class="layui-form-label">创建时间</label>
+		  <div class="layui-input-inline">
+		    <input type="text" disabled="disabled" value="#(room.createTime ??)" style="width: 300px" name=""  placeholder="" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		
+		<div class="layui-form-item">
+		  <label class="layui-form-label">房间公告</label>
+		  <div class="layui-input-inline">
+		    <input type="text" value="#(room.announcement ??)" style="width: 300px" name="announcement"  placeholder="" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		<div class="layui-form-item">
+		  <label class="layui-form-label">直播间地址</label>
+		  <div class="layui-input-inline">
+		    <input type="text" value="#(room.address ??)" style="width: 300px" name="address"  placeholder="" autocomplete="off" class="layui-input">
+		  </div>
+		</div>
+		<label class="layui-form-label">房管</label>
+		<table class="layui-table" id="table-data">
+			<thead>
+				<tr>
+					<th>手机号码</th>
+					<th>昵称</th>
+					<th>头像</th>
+					<!-- <th>操作</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				#for(obj : room.manageList)
+					<tr ng-repeat="obj in list">
+						<td>#(obj.mobile)</td>
+						<td>#(obj.nick)</td>
+						<td><img src="#(obj.head)"></td>
+					</tr>
+				#end
+			</tbody>
+		</table>
+		<label class="layui-form-label">商家</label>
+		<table class="layui-table" id="table-data">
+			<thead>
+				<tr>
+					<th>手机号码</th>
+					<th>昵称</th>
+					<th>头像</th>
+					<!-- <th>操作</th> -->
+				</tr>
+			</thead>
+			<tbody>
+				#for(obj : room.merchantList)
+					<tr ng-repeat="obj in list">
+						<td>#(obj.mobile)</td>
+						<td>#(obj.nick)</td>
+						<td><img src="#(obj.head)"></td>
+					</tr>
+				#end
+			</tbody>
+		</table>
+	 </form>
+	<div class="layui-form-item layui-hide">
+		<button class="layui-btn" lay-submit
+			lay-filter="LAY-room-submit" id="LAY-room-submit">提交</button>
+	</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	
+	<script>
+	  layui.config({
+	    base: '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+	  }).extend({
+	    index: 'lib/index' //主入口模块
+	  }).use(['index', 'form','roomForm'], function(){
+	    var $ = layui.$
+	    ,form = layui.form ;
+	  })
+  </script>
+</body>
+</html>

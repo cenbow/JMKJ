@@ -1,0 +1,87 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layuiAdmin 角色管理 iframe 框</title>
+#include("/WEB-INF/view/system/_common/meta.html")
+#set(curl = ctx+"/system/shop/order")
+<link href="#(ctx)/assets/b2c-web/style/orderDetail.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+	<div>
+		<input type="hidden" id="curl" value="#(curl)">
+		<input type="hidden" id="ctx" value="#(ctx)">
+		<input type="hidden" id="menuId" value="#(menuId)">
+	</div>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+						<div class="layui-form" lay-filter="layuiadmin-form-order"
+							id="layuiadmin-form-order" style="padding: 20px 0 0 0;">
+							
+							<input type="hidden" name="orderId" value='#(orderId ??)'/>
+							
+							<div class="layui-card">
+									<div class="layui-card-header">订单概况</div>
+									<div class="layui-card-body">
+										<div class="orderDetail">
+											<div class="orderLeft">
+												<p><span class="slabel">订单状态：</span><span class='order_state'></span></p>
+												<p><span class="slabel">订单总计：</span><span class='order_paid'></span></p>
+												<p><span class="slabel">下单用户：</span><span class='order_buyName' ></span></p>
+												<p><span class="slabel">付款方式：</span><span class='order_payType' ></span></p>
+												<p><span class="slabel">物流方式：</span><span  class='order_expressWay'></span></p>
+												<p><span class="slabel">物流信息：</span><span  class='order_expressInfo'></span></p>
+												<p><span class="slabel">收货信息：</span><span  class='order_sure' ></span></p>
+											</div>
+											<div class="orderRight">
+												<p><span>买家备注：</span>
+													<span class='order_remark'></span>
+												</p>
+											</div>
+										
+										</div>
+										
+								   </div>
+						    </div>
+						</div>
+						
+						
+						<div class="layui-col-md12"  style="padding: 20px 0 0 0;">
+							<div class="layui-card oderTable">
+										
+						    </div>
+						</div>
+						
+						<div class="layui-col-md12" style="padding: 20px 0 0 0;">
+							<div class="layui-card goodsTable">
+								
+						    </div>
+						</div>
+						
+						
+			
+			</div>
+		</div>
+	</div>
+
+
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	
+	<script>
+	  layui.config({
+	    base: '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+	  }).extend({
+	    index: 'lib/index' //主入口模块
+	  }).use(['index', 'form','onlineOrderDetail'], function(){
+	    var $ = layui.$
+	    ,form = layui.form ;
+	    
+	    
+	  })
+  </script>
+</body>
+</html>

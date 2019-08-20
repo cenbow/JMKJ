@@ -1,0 +1,38 @@
+projectName = shop-webcast
+isNeedPJ = true
+devMode = false
+devSql = false
+#devSql = true
+#devMode = true
+
+#base_jdbcUrl = jdbc:mysql://10.0.0.250:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#base_user = root
+#base_password = root
+
+#base_jdbcUrl = jdbc:mysql://120.79.3.175:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#base_user = root
+#base_password = 123456
+
+#base_jdbcUrl = jdbc:mysql://10.0.0.250:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#base_user = root
+#base_password = root
+
+#\u6b63\u5f0f\u670d
+#base_jdbcUrl = jdbc:mysql://114.55.167.83:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+#base_user = root
+#base_password = 20190720@abcd
+
+#\u5916\u7f51
+#base_jdbcUrl = jdbc:mysql://rm-bp1pupqb14d8s281h8o.mysql.rds.aliyuncs.com:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+#base_user = xiaopao
+#base_password = 20190720@abcd
+
+#\u5185\u7f51
+base_jdbcUrl = jdbc:mysql://rm-bp1pupqb14d8s281h.mysql.rds.aliyuncs.com:3306/shop-webcast?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+base_user = xiaopao
+base_password = 20190720@abcd
+
+#redis
+redis_cacheName=shop-webcast
+redis_url=127.0.0.1
+redis_port = 6379

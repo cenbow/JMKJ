@@ -1,0 +1,3 @@
+undertow.contextPath=/shop-webcast
+undertow.host=0.0.0.0
+undertow.hotSwapClassPrefix=com.cn.jm.core.

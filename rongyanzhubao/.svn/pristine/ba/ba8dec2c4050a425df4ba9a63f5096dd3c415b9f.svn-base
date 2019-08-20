@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="metaType.id" value="#(metaType.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">no</label>
+		<div class="layui-input-block">
+			<input type="text" name="metaType.no" value="#(metaType.no)"
+				lay-verify="title" autocomplete="off" placeholder="请输入no"
+				class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="metaType.name" value="#(metaType.name)"
+				lay-verify="title" autocomplete="off" placeholder="请输入名称"
+				class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">描述</label>
+		<div class="layui-input-block">
+			<textarea name="metaType.desc" vlay-verify="content"
+				autocomplete="off" placeholder="请输入内容" class="layui-textarea"
+				datatype="*2-200">#(metaType.desc)</textarea>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>菜单列表</title> 
+#include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<div class="layui-card-body layui-form">
+						<div style="padding-bottom: 10px;">
+							<button class="layui-btn layui-btn-normal LAY-menu-add" data-type="add">添加</button>
+						</div>
+
+						<form class="layui-form" id="tf">
+							<table class="layui-hide" id="auth-table" lay-filter="auth-table">
+								<div class="layui-btn-group">
+							        <input style="width: 125px" class="layui-btn" id="btn-expand" value="全部展开" >
+							        <input style="width: 125px" class="layui-btn" id="btn-fold" value="全部折叠" >
+							        <input style="width: 125px" class="layui-btn" id="btn-refresh" value="刷新表格">
+							    </div>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script type="text/javascript">
+	</script>
+
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			treetable: 'treetable-lay/treetable'
+		}).use([ 'treetable', 'table' ],function() {
+			var $ = layui.jquery;
+	        var table = layui.table;
+	        var layer = layui.layer;
+	        var treetable = layui.treetable;
+	        
+	        // 渲染表格
+	        var renderTable = function () {
+	            layer.load(2);
+	            treetable.render({
+	                treeColIndex: 1,
+	                treeSpid: -1,
+	                treeIdName: 'id',
+	                treePidName: 'parent',
+	                treeDefaultClose: true,
+	                treeLinkage: false,
+	                elem: '#auth-table',
+	                url: '#(ctx)/system/menu/getMenuList',
+	                page: false,
+	                cols: [[
+	                    {type: 'numbers'},
+	                    {field: 'id', title: 'id'},
+	                    {field: 'parent', title: '上级id', edit: 'text', width:85},
+	                    {field: 'mType', title: '属于商家页面(0否1是)', edit: 'text', width:85},
+	                    {field: 'name', title: '菜单名称', edit: 'text'},
+	                    {field: 'sort', title: '排序', edit: 'text'},
+	                    {field: 'url', title: '菜单路径', edit: 'text'},
+	                    {fixed: 'right', title:'操作', width:265}
+	                ]],
+	                done: function (res, curr, count) {
+	                    layer.closeAll('loading');
+	                }
+	            });
+	        };
+	        
+	        renderTable();
+	        
+			table.on('edit(auth-table)', function(obj){
+			      var value = obj.value //得到修改后的值
+			      ,data = obj.data //得到所在行所有键值
+			      ,field = obj.field; //得到字段
+			      var url;
+			      var json = {};
+			      json[field] = value;
+				  json.id =  data.id;
+				  //如果菜单id为空则为按钮更新
+			      if(data.menuId == undefined){
+			    	  url = "#(ctx)/system/menu/editMenu";
+			      }else{
+			    	  url = "#(ctx)/system/menu/editPower";
+			      }
+				$.ajax({  
+		          type : 'post',  
+		          url :  url,
+		          data:json,
+		          success : function(data){
+		        	  systemAlert(data,function(){
+		        		  if(data.code === 1)
+		        			  renderTable(); //数据刷新
+		        	  })
+		        	  
+		          },error:function(data){
+		        	  systemAlertError();
+		          }
+				}) 
+			});
+			
+			
+		    var active = {
+		    	  add: function(){
+		    		 openAdd(-1,function(data){
+		          		  systemAlert(data,function(){
+			        		  if(data.code === 1)
+			        			  renderTable(); //数据刷新
+			        	  })
+	          		})
+		    	  }
+		   	} 
+			
+		    $('.layui-btn.LAY-menu-add').on('click', function(){
+			      var type = $(this).data('type');
+			      active[type] ? active[type].call(this) : '';
+			  });
+			
+		    
+	        $('#btn-expand').click(function () {
+	            treetable.expandAll('#auth-table');
+	        });
+
+	        $('#btn-fold').click(function () {
+	            treetable.foldAll('#auth-table');
+	        });
+
+	        $('#btn-refresh').click(function () {
+	            renderTable();
+	        });
+	        
+	        //监听工具条
+	        table.on('tool(auth-table)', function(obj){
+		          var data = obj.data;
+		          if(obj.event === 'del' || obj.event === 'delButton'){
+		            layer.confirm('确定删除？', function(index){
+		            	 var json = {};
+					      	json.id =  data.id;
+		            	 var url;
+					     if(obj.event === 'del'){
+					    	 url = "#(ctx)/system/menu/delMenu";
+					     }else{
+					    	 url = "#(ctx)/system/menu/delPower";
+					     }
+						$.ajax({  
+				          type : 'post',  
+				          url :  url,
+				          data : json,  
+				          success : function(data){
+				        	  systemAlert(data,function(){
+				        		  if(data.code === 1)
+				        			  renderTable(); //数据刷新
+				        	  })
+				        	  
+				          },error:function(data){
+				        	  systemAlertError();
+				          }
+						}) 
+		              layer.close(index);
+		            });
+		            
+		          }else if(obj.event === 'save'){
+		          		openAdd(data.id,function(data){
+			          		  systemAlert(data,function(){
+				        		  if(data.code === 1)
+				        			  renderTable(); //数据刷新
+				        	  })
+		          		})
+		           }else if(obj.event === 'saveButton'){
+		        	   openButtonAdd(data.id,function(data){
+			          		  systemAlert(data,function(){
+				        		  if(data.code === 1)
+				        			  renderTable(); //数据刷新
+				        	  })
+		          		})
+		           }
+		          
+	        	});
+	        
+		});
+		
+		function openButtonAdd(menuId,myfunction){
+			layer.open({
+	            type: 2
+	            ,title: '新增按钮'
+	            ,content: '#(ctx)/system/menu/toButtonAdd?menuId='+menuId
+	            ,area: ['480px', '480px']
+	            ,btn: ['确定', '取消']
+	            ,yes: function(index, layero){
+	              var iframeWindow = window['layui-layer-iframe'+ index]
+	              ,submit = layero.find('iframe').contents().find("#LAY-power-submit");
+	              //监听提交
+	              iframeWindow.layui.form.on('submit(LAY-power-submit)', function(data){
+	                var field = data.field; //获取提交的字段
+	                $.ajax({  
+				          type : 'post',  
+				          url :  '#(ctx)/system/menu/savePower',
+				          data : field,
+				          success : function(data){
+				        	  myfunction(data);
+				          },error:function(data){
+				        	  systemAlertError();
+				          }
+					}) 
+	                layer.close(index); //关闭弹层
+	              });  
+	              submit.trigger('click');
+	            }
+	            ,success: function(layero, index){
+	            
+	            }
+		    })
+		}
+		
+		function openAdd(parentId,myfunction){
+  	  		layer.open({
+	            type: 2
+	            ,title: '新增菜单'
+	            ,content: '#(ctx)/system/menu/toAdd?parentId='+parentId
+	            ,area: ['480px', '480px']
+	            ,btn: ['确定', '取消']
+	            ,yes: function(index, layero){
+	              var iframeWindow = window['layui-layer-iframe'+ index]
+	              ,submit = layero.find('iframe').contents().find("#LAY-menu-submit");
+	              //监听提交
+	              iframeWindow.layui.form.on('submit(LAY-menu-submit)', function(data){
+	                var field = data.field; //获取提交的字段
+	                $.ajax({  
+				          type : 'post',  
+				          url :  '#(ctx)/system/menu/saveMenu',
+				          data : field,
+				          success : function(data){
+				        	  myfunction(data);
+				          },error:function(data){
+				        	  systemAlertError();
+				          }
+					}) 
+	                layer.close(index); //关闭弹层
+	              });  
+	              submit.trigger('click');
+	            }
+	            ,success: function(layero, index){
+	            
+	            }
+	       })
+	    }
+		
+		
+		
+		
+		
+	</script>
+
+</body>
+</html>

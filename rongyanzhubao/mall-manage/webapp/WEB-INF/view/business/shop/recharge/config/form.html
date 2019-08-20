@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="rechargeConfig.id" value="#(rechargeConfig.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">标题</label>
+		<div class="layui-input-block">
+			<input type="text" name="rechargeConfig.name" value="#(rechargeConfig.name)" vlay-verify="title" autocomplete="off" placeholder="请输入充值标题" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">金额</label>
+		<div class="layui-input-block">
+			<input type="text" name="rechargeConfig.amount" value="#(rechargeConfig.amount)" vlay-verify="title" autocomplete="off" placeholder="请输入充值金额" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">赠送金额</label>
+		<div class="layui-input-block">
+			<input type="text" name="rechargeConfig.donationAmount" value="#(rechargeConfig.donationAmount)" vlay-verify="title" autocomplete="off" placeholder="请输入充值金额对应赠送金额" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">赠送积分/币</label>
+		<div class="layui-input-block">
+			<input type="text" name="rechargeConfig.donationIntegral" value="#(rechargeConfig.donationIntegral)" vlay-verify="title" autocomplete="off" placeholder="请输入充值金额对应赠送积分/币" class="layui-input" #if(action == 2) disabled #end  datatype="*1-200">
+		</div>
+	</div>
+</body>
+</html>

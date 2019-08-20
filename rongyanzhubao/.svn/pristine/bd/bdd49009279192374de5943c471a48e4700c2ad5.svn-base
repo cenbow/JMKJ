@@ -1,0 +1,105 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layuiAdmin 角色管理 iframe 框</title>
+	#include("/WEB-INF/view/system/_common/meta.html")
+	#set(curl = ctx+"/system/shop/marketing")
+	<link rel="stylesheet" href="#(ctx)/assets/b2c-web/style/cyType.css" media="all">
+    <link rel="stylesheet" href="#(ctx)/assets/b2c-web/style/font-awesome.min.css" media="all">
+</head>
+<body>
+	<div>
+		<input type="hidden" id="curl" value="#(curl)">
+		<input type="hidden" id="ctx" value="#(ctx)">
+		<input type="hidden" id="menuId" value="#(menuId)">
+	</div>
+<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+		<div class="layui-col-md7">
+				<div class="layui-card">
+	 				<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+				        <div class="layui-form-item">
+				          <div class="layui-inline">
+				            <label class="layui-form-label">商品名</label>
+				            <div class="layui-input-inline">
+				              <input type="text" name="keyword" placeholder="请输入" autocomplete="off" class="layui-input">
+				            </div>
+				          </div>
+				          <div class="layui-inline">
+				            <button class="layui-btn  layui-btn-normal layuiadmin-btn-list" lay-submit lay-filter="LAY-goods-search">
+				              <i class="layui-icon  layui-icon-search layuiadmin-button-btn"></i>
+				            </button>
+				            <button class="layui-btn  layui-btn-normal layuiadmin-btn-list" lay-submit lay-filter="LAY-goods-push">
+				              	加入
+				            </button>
+				          </div>
+				        </div>
+					 </div>
+		         	<div class="layui-card-body">
+			         		<table class="layui-table" lay-skin="line" id="couponGoods-table" lay-filter="couponGoods-table">
+							</table>
+		         	</div>
+				</div>
+			</div>	
+				
+					 <div class="layui-col-md5">
+						<div class="layui-card">
+						<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+							<button class="layui-btn  layui-btn-danger layuiadmin-btn-list" lay-submit lay-filter="LAY-goods-remove">
+				              	移除
+				            </button>
+						</div>
+						
+						 
+						<div class="layui-form layui-card-body">
+								<div class="layui-form-item">
+									<div class="transfer-panel transfer-panel-right">
+					                    <dd lay-value="" class="transfer-search-div">
+					                    <span  class="transfer-title" >
+					                    <input type="checkbox" lay-filter="transferRightCheckedAll" title="全选" class="selectAllRight" lay-skin="primary">
+					                    </span>
+					                    </dd>
+					                    <form id="rightDiv">
+						                <input type="hidden" id="marketingId" name ="marketingId" value="#(marketingId)">
+					                    <div class="transfer-div">
+					                    	#for(obj : selectedList)
+						                    	<dd lay-value="#(obj.goodsId)" lay-title="#(obj.name)">
+						                    	<input type="hidden" name="goodsIds" value="#(obj.goodsId)">
+	         									<input lay-filter="transferRightChecked" name ="goodsNames" type="checkbox"  title="#(obj.name)" lay-skin="primary">
+	         									</dd>
+					                    	#end
+					                    </div>
+					                    </form>
+					                 </div>
+					             </div>
+			             </div>
+			             </div>
+					</div>
+				
+				
+				<!-- <div class="layui-form-item ">
+					<button class="layui-btn" lay-submit
+						lay-filter="LAY-couponGoods-submit" id="LAY-couponGoods-submit">提交</button>
+				</div> -->
+				
+				
+		</div>
+	</div>
+	
+
+	#include("/WEB-INF/view/system/_common/js.html")
+		<script>
+	  	  layui.config({
+		    base: '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		  }).extend({
+		    index: 'lib/index' //主入口模块
+		  }).use(['index', 'form','selectGoods'], function(){
+		    var $ = layui.$
+		    ,form = layui.form ;
+		  })
+  </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title> #include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	#set(curl = ctx+"/system/account/admin")
+
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<form
+						class="layui-form layui-card-header layuiadmin-card-header-auto"
+						id="form-search">
+						<div class="layui-form-item">
+							<div class="layui-inline">
+								<label class="layui-form-label">ID</label>
+								<div class="layui-input-block">
+									<input type="text" name="id" value="#(id)" placeholder="请输入ID"
+										autocomplete="off" class="layui-input">
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="layui-card-body">
+						<div style="padding-bottom: 10px;">
+							<div class="layui-btn-group table-operate-btn">
+								<a class="layui-btn layui-btn-normal"
+									lay-href="#(curl)/add">新增</a>
+								#-- <button class="layui-btn layui-btn-danger" data-type="dels">批量删除</button> --#
+								<button class="layui-btn " data-type="search">
+									<i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+								</button>
+							</div>
+						</div>
+
+						<form class="layui-form" id="tf">
+							<table class="layui-table" id="table-data">
+								<colgroup>
+									<col width="10">
+									<col width="50">
+									<col width="150">
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+									<col>
+								</colgroup>
+								<thead>
+									<tr>
+										<th><input type="checkbox" lay-skin="primary"
+											lay-filter="allChoose"></th>
+										<th>ID</th>
+										<th>账号</th>
+										<th>状态</th>
+										<th>创建时间</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									#for(obj : page.list)
+									<tr ng-repeat="obj in list">
+										<td><input type="checkbox" lay-skin="primary" name="ids"
+											value="#( obj.id)"></td>
+										<td>#(obj.id)</td>
+										<td>#(obj.account)</td>
+										<td>#if(obj.state == 1) 冻结 #else 正常 #end</td>
+										<!-- <td>#if(obj.type == -1)超级管理员 #else if(obj.type == 0)系统管理  #end</td> -->
+										<td>#(obj.createTime)</td>
+										<td><a class="layui-btn layui-btn-xs"
+											lay-href="#(curl)/edit?id=#(obj.id)">编辑</a>
+											#if(obj.state == 0)
+											<button type="button"
+												class="layui-btn layui-btn-danger layui-btn-xs"
+												onclick="setState(#(obj.id),'确定冻结吗？');">冻结</button>
+											#else
+											<button type="button"
+												class="layui-btn layui-btn-normal layui-btn-xs"
+												onclick="setState(#(obj.id),'确定解冻吗？');">解冻</button>
+											#end
+											#-- <button type="button"
+												class="layui-btn layui-btn-danger layui-btn-xs"
+												onclick="del(#(obj.id));">删除</button> --#
+										</td>
+									</tr>
+									#end
+								</tbody>
+							</table>
+							#set(currentPage = page.pageNumber) #set(totalRow =
+							page.totalRow) #set(pageSize = page.pageSize) #set(actionUrl =
+							curl+"/page/") #set(urlParas = parameter)
+							<div class="layui-card">
+								<div class="layui-card-body">
+									<div id="page"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		function setState(accountId, message){
+			layer.confirm(message,function() {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/setState",
+					data : 'id='+ accountId,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+					}
+				});
+			});
+		}
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			index : 'lib/index' //主入口模块
+		}).use([ 'index', 'table' ],function() {
+			var admin = layui.admin, table = layui.table, setter = layui.setter, form = layui.form,laypage = layui.laypage;
+
+			laypage.render({
+				elem: 'page',
+			    count: #(totalRow),
+			    curr: #(currentPage),
+			    limit:20,
+			    layout: ['count', 'prev', 'page', 'next',  'skip'],
+			    jump: function(obj, first){
+			    	if (!first) {
+			    		location.href = '#(actionUrl)' + obj.curr + '#(urlParas)';
+			    	 }
+			    }
+			});
+
+			form.on('checkbox(allChoose)', function(data){
+				var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');		    
+				child.each(function(index, item){		      
+					item.checked = data.elem.checked;		  
+				});		    
+				form.render('checkbox');		
+			});
+
+			//监听表格复选框选择
+			table.on('checkbox(table-data)', function(obj) {
+				console.log(obj)
+			});
+
+			//监听工具条
+			table.on('tool(table-data)',function(obj) {
+				var data = obj.data;
+				if (obj.event === 'detail') {
+					layer.open({
+						type : 2,
+						title : '查看',
+						content : '#(curl)/detail',
+						maxmin : true,
+						btn : [ '关闭' ]
+					});
+				} else if (obj.event === 'del') {//删除
+					layer.confirm('确定删除么',function(index) {
+						$.ajax({
+							type : "post",
+							url : "#(curl)/delete",
+							data : 'id='+ data.id,
+							async : true,
+							headers : {
+								sessionId : layui.data(setter.myCache).sessionId,
+								menuId : layui.data(setter.myCache).menuId
+							},
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									table.reload('table-data');
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								layer.msg(data.desc);
+								layer.close(index);
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				} else if (obj.event === 'edit') {//编辑
+					layer.open({
+						type : 2,
+						title : '添加',
+						content : '#(curl)/edit',
+						maxmin : true,
+						btn : [ '确定','取消' ],
+						yes : function(index,layero) {
+							var iframeWindow = window['layui-layer-iframe'+ index], submitID = 'LAY-user-front-submit', 
+								submit = layero.find('iframe').contents().find('#'+ submitID);
+							//监听提交
+							iframeWindow.layui.form.on('submit('+ submitID+ ')',function(data) {
+								var field = data.field; //获取提交的字段
+
+								//提交 Ajax 成功后，静态更新表格中的数据
+								//$.ajax({});
+								table.reload('LAY-user-front-submit'); //数据刷新
+								layer.close(index); //关闭弹层
+							});
+							submit.trigger('click');
+						}
+					});
+				}
+			});
+
+			var $ = layui.$, active = {
+				dels : function() { //批量删除
+					layer.confirm('真的吗？',function(index) {
+						layer.close(index);
+						$.ajax({
+							type : "post",
+							url : "#(curl)/dels",
+							data : $("#tf").serialize(), 
+							async : true,
+							beforeSend : function(request) {
+								layer.load(2);
+							},
+							success : function(data) {
+								if (data.code == 1) {
+									window.location.reload();
+								} else if (data.code == 2) {
+									location.href = '#(ctx)/system/toLogin';
+								}
+								parent.layer.msg(data.desc,{offset:'80%'});
+								layer.closeAll('loading');
+							},
+							error : function() {
+								layer.closeAll('loading');
+							}
+						});
+					});
+				},
+				search : function() { //搜索
+					var field = $("#form-search").serialize();
+					location.href = '#(curl)/page?'+field;
+				}
+			};
+
+			$('.table-operate-btn .layui-btn').on('click',function() {
+				var type = $(this).data('type');
+				active[type] ? active[type].call(this): '';
+			});
+
+		});
+		
+		//删除
+		function del(id){
+			layer.confirm('确定删除么',function(index) {
+				$.ajax({
+					type : "post",
+					url : "#(curl)/delete",
+					data : 'id='+ id,
+					async : true,
+					success : function(data) {
+						if (data.code == 1) {
+							window.location.reload();
+						} else if (data.code == 2) {
+							location.href = '#(ctx)/system/toLogin';
+						}
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.close(index);
+						layer.closeAll('loading');
+					},
+					error : function() {
+						layer.close(index);
+						layer.closeAll('loading');
+					}
+				});
+			});
+		}
+
+	
+	</script>
+</body>
+</html>

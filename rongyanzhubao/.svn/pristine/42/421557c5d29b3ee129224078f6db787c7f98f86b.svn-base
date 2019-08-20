@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="./css/index.css" />
+  <link rel="stylesheet" href="./css/init.css" />
+  <title>厂商</title>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="search">
+      <a href="search.html" class="input">
+        <i></i>搜索宝贝名称
+      </a>
+      <a class="icon" href="shopSort.html"></a>
+    </div>
+    <div class="bg-img" :style="{backgroundImage: 'url(' + userInfo.head +')'}">
+      <div class="box">
+        <div class="title">{{userInfo.nick}}</div>
+        <div class="btns"><span>源头批发</span><span>手机实拍</span><span>七天无理由退货</span></div>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab">
+        <span :class="[index == 0 && 'active']" @click="chooseTab(0)">新品宝贝</span>
+        <span :class="[index == 1 && 'active']" @click="chooseTab(1)">在售宝贝</span>
+        <span :class="[index == 2 && 'active']" @click="chooseTab(2)">已售欣赏</span>
+      </div>
+      <div class="line" :style="{left: index*33.33 + '%'}">
+        <div></div>
+      </div>
+    </div>
+
+    <div class="layer1" v-if="index == 0">
+      <div class="item" v-for="(item, index) in goodsList" :key="index">
+        <p class="title">{{item.formatTime}}</p>
+        <div class="video-list">
+          <a :href="'details.html?id='+items.id + '&goodsResaleId=' + items.goodsResaleId" v-for="(items, indexs) in item.value" :key="indexs">
+            <div class="video-item">
+              <img :src="items.thumbnail">
+              <i class="icon"></i>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="layer2" v-if="index == 1">
+      <a :href="'details.html?id='+item.id + '&goodsResaleId=' + item.goodsResaleId" v-for="(item, index) in goodsList" :key="index">
+        <div class="item">
+          <div class="img-box">
+            <img :src="item.thumbnail">
+            <i></i>
+          </div>
+
+          <div class="box">
+            <p>{{item.name}}</p>
+            <p>
+              <span>¥</span>
+              <span>{{item.price}}</span>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="layer3" v-if="index == 2">
+      <a :href="'details.html?id='+item.id + '&goodsResaleId=' + item.goodsResaleId" v-for="(item, index) in goodsList" :key="index">
+        <div class="item">
+          <img class="bgimg" :src="item.thumbnail">
+          <i class="icon-state"></i>
+          <i class="icon-play"></i>
+          <p class="title">{{item.name}}发</p>
+        </div>
+      </a>
+    </div>
+    <div class="layer0" v-if="false">
+      <p class="icon"></p>
+      <p class="title">暂无出售的宝贝~</p>
+    </div>
+  </div>
+</body>
+<script src="./js/rem.js"></script>
+<script src="./js/url.js"></script>
+<script src="./js/axios.js"></script>
+<script src="./js/vue.min.js"></script>
+<script type="text/javascript">
+  const vm = new Vue({
+    el: '.container',
+    data() {
+      return {
+        index: 0,
+        userInfo: {},
+        pageNumber: 1,
+        goodsList:[],
+        accountId: 2
+      }
+    },
+    methods: {
+      getUrlKey(name) {
+        return (
+          decodeURIComponent(
+            (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
+              location.href
+            ) || [, ""])[1].replace(/\+/g, "%20")
+          ) || null
+        );
+      },
+      chooseTab(num) {
+        this.index = num
+        this.pageNumber = 1
+        this.goodsList = []
+        this.getList()
+      },
+      close() {
+        this.index = 0
+      },
+      search() {
+        console.log('搜索');
+      },
+      getUserInfo() {
+        let that = this
+        axios.post('/api/account/user/informationByAccountId',
+          new URLSearchParams({accountId: that.accountId})
+        ).then(function(res) {
+          console.log(res.data, '用户信息');
+          if(res.data.code == 1){
+            that.userInfo = res.data.data
+          }
+        })
+      },
+      getList(){
+        let that = this
+        if(that.index == 0){
+          axios.post('/api/goods/htmlNewGoods',
+            new URLSearchParams({accountId: that.accountId , pageSize: 10 , pageNumber: that.pageNumber ,type: 0})
+          ).then(function(res) {
+            console.log(res.data, '新品');
+            if(res.data.code == 1){
+              if(res.data.data.day){
+                for(var i=0;i<=res.data.data.day;i++){
+                  that.goodsList.push(res.data.data['day' + i])
+                }
+              }
+            }
+          })
+        }else{
+          axios.post('/api/goods/htmlGoods',
+            new URLSearchParams({accountId: that.accountId , pageSize: 10 , pageNumber: that.pageNumber ,type: that.index})
+          ).then(function(res) {
+            console.log(res.data, '商品');
+            if(res.data.code == 1){
+              that.goodsList = res.data.data.list
+            }
+          })
+        }
+      }
+    },
+    mounted() {
+      axios.defaults.baseURL = baseUrl;
+      axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+      localStorage.setItem("accountId", this.getUrlKey('accountId'));
+      this.accountId = this.getUrlKey('accountId');
+      this.getUserInfo()
+      this.getList()
+    }
+  })
+</script>
+
+</html>

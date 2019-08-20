@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="img.id" value="#(img.id)" />
+	<input type="hidden" name="img.type" value="4" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">标题</label>
+		<div class="layui-input-block">
+			<input type="text" name="img.name" value="#(img.name)" lay-verify="title" autocomplete="off" placeholder="请输入昵称" class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">内容</label>
+		<div class="layui-input-block">
+			<div class="fileinput fileinput-new" data-provides="fileinput">
+				<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+					<img #if(img.image !=null) src="#(img.image)"
+				#else src="#(ctx)/assets/img/no.png" #end alt="" />
+				</div>
+				<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+				<div>
+					<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span> <input type="file" name="image">
+					</span> <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 删除 </a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">类型</label>
+		<div class="layui-input-block">
+			<input type="radio" name="img.state" lay-filter="imgType" value="0" title="默认"
+				#if(img.state == null || img.state == 0) checked #end> 
+			<input type="radio" name="img.state" lay-filter="imgType" value="2" title="超链接"
+				#if(img.state != null && img.state == 2) checked #end>
+			<input type="radio" name="img.state" lay-filter="imgType" value="1" title="商品"
+				#if(img.state != null && img.state == 1) checked #end> 
+		</div>
+	</div>
+	<div class="layui-form-item" id="advertLink"  style="display: none">
+		<label class="layui-form-label">超连接</label>
+		<div class="layui-input-block">
+			<input type="text" name="img.link" value="#(img.link)"
+				lay-verify="title" autocomplete="off" placeholder="请输入广告备注内容,非必填项"
+				class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item" id="advertIds" id="advertLink"  style="display: none">
+		<label class="layui-form-label">选择商品</label>
+		<div class="layui-input-block">
+			<select id="advertSelectIds" name="img.ids" >
+				#for(goods : goodsList)
+					<option value="#(goods.id)" #if(img.ids == goods.id)selected #end>#(goods.name)</option>
+				 #end
+			</select>
+		</div>
+	</div>
+</body>
+</html>

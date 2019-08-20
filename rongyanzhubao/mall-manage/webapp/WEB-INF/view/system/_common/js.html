@@ -1,0 +1,48 @@
+<script src="#(ctx)/assets/layuiadmin/layui/layui.js"></script>
+<script src="#(ctx)/assets/jquery.min.js" type="text/javascript"></script>
+<script src="#(ctx)/assets/jquery.serializejson.min.js" type="text/javascript"></script>
+<script src="#(ctx)/assets/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script type="text/javascript" src="#(ctx)/assets/umeditor/third-party/template.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="#(ctx)/assets/umeditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="#(ctx)/assets/umeditor/umeditor.js"></script>
+<script type="text/javascript" src="#(ctx)/assets/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+window.UMEDITOR_HOME_URL = "#(ctx)/assets/umeditor/";
+var um = UM.getEditor('ueditor');
+</script>
+
+<script src="#(ctx)/assets/validform/validform_min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	var valid;
+	$(function() {
+		valid = $("#form").Validform({
+			btnSubmit:"#submit",
+			tiptype : 3
+			});
+		})
+		
+	 function systemAlert(data,myfunction){
+	  var icon = data.code === 1 ? 1 : 2;
+	       layer.alert(data.desc, {
+	            icon: icon,
+	            shadeClose: true,
+	            title: '提示框'
+	        },function(index){
+	          layer.close(index);
+	          if(data.code === 1)
+	            myfunction()
+	        })
+	}
+	
+	function systemAlertError(){
+	  layer.alert('操作失败', {
+	          icon: 2,
+	          shadeClose: true,
+	          title: '提示框'
+	    })
+	}
+
+</script>
+
+

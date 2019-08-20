@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="layui-form-item" hidden>
+		<label class="layui-form-label">商品模型</label>
+		<div class="layui-input-block">
+			<select name="goods.shopModId" id = "shopMdId" lay-filter="shopMdId"> 
+				#for(obj1 : goodsModelsList)
+				<option value="#(obj1.id)" #if(goods.shopModId == obj1.id) selected #end>#(obj1.name)</option>
+				#end
+			</select>
+			
+		</div>
+	</div>
+	<input type="hidden" name = "isEditSku" id = "isEditSku" value="#(isEditSku)">
+	
+	<div id ="specAttrs" hidden></div>
+	#if(isEdit) 
+		#for(sku : skuList)
+			<div class="layui-form-item">
+				<input type="hidden" value="#(sku.id)" name="skuId#(for.index)">
+				<label class="layui-form-label">#(sku.skuCode)</label>
+				<div class="layui-input-block specAttrId">
+					<textarea rows="2" cols="95%" name="name#(for.index)" datatype="*2-200">#(sku.name)</textarea>
+				</div>
+			</div>
+		#end	
+	#end
+	<div id = "skuAttrs"> </div>
+	
+</body>
+</html>

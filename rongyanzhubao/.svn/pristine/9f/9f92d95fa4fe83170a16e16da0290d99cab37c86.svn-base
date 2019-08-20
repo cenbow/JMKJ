@@ -1,0 +1,124 @@
+package #basePkg#._controller.ads;
+
+import java.util.List;
+
+import com.cn.jm.core.web.controller.JMBaseApiController;
+import com.cn.jm.service.JMImgService;
+import com.cn.jm.web.core.parse.annotation.API;
+import com.cn.jm.web.core.parse.annotation.ParseOrder;
+import com.cn.jm.web.core.router.JMRouterMapping;
+import com.jfinal.aop.Before;
+import com.jfinal.aop.Inject;
+
+@ParseOrder(1)
+@API
+@JMRouterMapping(url = "/api#url#")
+public class Api#BModelName#Controller extends JMBaseApiController {
+
+	@Inject
+	public JM#BModelName#Service #modelName#Service;
+	
+	@Before(value={JMApiAccountInterceptor.class})
+	public void page(){
+		Account account = getAttr("account");
+		String keyword = getPara("keyword","");
+		Integer id = getParaToInt("id");
+		
+		String startTime = getPara("startTime","");
+		String endTime = getPara("endTime","");
+		
+		Integer pageNumber = getParaToInt(0, 1);
+		Integer pageSize = getParaToInt("pageSize",JMConsts.pageSize);
+		
+		HashMap<String, Object> andpm = new HashMap<String, Object>();
+		HashMap<String, Object> likepm = new HashMap<String, Object>();
+		HashMap<String, Object> orpm = new HashMap<String, Object>();
+		
+		if (JMToolString.isNotEmpty(keyword)) {
+			likepm.put("name", keyword);
+		}
+		if (id != null) {
+			andpm.put("id", id);
+		}
+		Page<#BModelName#> page = null;
+		
+		if (JMToolString.isNotEmpty(startTime) && JMToolString.isNotEmpty(endTime)) {
+			page = #modelName#Dao.page(pageNumber, pageSize, "", andpm, orpm, likepm, startTime,endTime,"id", JMBaseDao.DESC, true);
+		}else {
+			page = #modelName#Dao.page(pageNumber, pageSize, "", andpm, orpm, likepm, "id", JMBaseDao.DESC, true);
+		}
+		
+		JMResult.success(this, page,"获取成功");
+	}
+	
+	@Before(value={JMSystemApiInterceptor.class})
+	public void save(){
+		if(isRepeatSubmit()){
+			JMResult.fail(this, "不允许重复提交");
+			return;
+		}
+		
+		#BModelName# #modelName# = getModel(#BModelName#.class);
+		#modelName#.setCreateTime(new Date());
+		if (#modelName#Dao.save(#modelName#)) {
+			JMResult.success(this, "创建成功");
+		}else {
+			JMResult.fail(this, "创建失败");
+		}
+	}
+	
+	@Before(value={JMSystemApiInterceptor.class})
+	public void update(){
+		String image = JMUploadKit.fileUpload(this,"image","#modelName#");
+		if(isRepeatSubmit()){
+			JMResult.fail(this, "不允许重复提交");
+			return;
+		}
+		
+		#BModelName# #modelName# = getModel(#BModelName#.class);
+		if(image != null)
+			#modelName#.setImage(JMUploadKit.uploadPath+"image/"+image.getName());
+		if (#modelName#Dao.update(#modelName#)) {
+			JMResult.success(this, "修改成功");
+		}else {
+			JMResult.fail(this, "修改失败");
+		}
+	}
+	
+	@Before(value={JMSystemApiInterceptor.class})
+	public void upload() {
+		File file = JMUploadKit.uploadAvatar(this, "file");
+		HashMap<String, Object> data = new HashMap<>();
+		data.put("name", file.getName());
+		data.put("file", JMUploadKit.uploadPath+"file/"+file.getName());
+		data.put("localFile", file.getAbsolutePath());
+		JMResult.success(this, data,"上传成功");
+	}
+
+	@Before(value={JMSystemApiInterceptor.class})
+	public void delete(){
+		int id = getParaToInt("id");
+		
+		if (#modelName#Dao.deleteById(id)) {
+			JMResult.success(this, "删除成功");
+		}else {
+			JMResult.fail(this, "删除失败");
+		}
+	}
+	
+	@Before(value={JMSystemApiInterceptor.class})
+	public void dels(){
+		Integer[] ids = getParaValuesToInt("ids");
+		if(ids != null){
+			boolean result = #modelName#Dao.deleteByIds(ids);
+			if (result) {
+				JMResult.success(this, "删除成功");
+			}else {
+				JMResult.fail(this, "删除失败");
+			}
+		}else {
+			JMResult.fail(this, "请选择需要删除的数据");
+		}
+	}
+	
+}

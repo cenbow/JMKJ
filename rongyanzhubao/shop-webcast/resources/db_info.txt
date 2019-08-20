@@ -1,0 +1,31 @@
+文档格式:
+#(时间)
+#(对数据库进行的操作)
+
+2019年6月28日 09:14:57
+DROP TABLE `shop-webcast`.`tb_account_expand`; 
+ALTER TABLE `shop-webcast`.`tb_account` ADD COLUMN `weChatId` VARCHAR(127) NULL COMMENT 'app微信登录id' AFTER `account`, ADD COLUMN `faceBookId` VARCHAR(127) NULL COMMENT 'faceBook登录id' AFTER `weChatId`, ADD COLUMN `qqId` VARCHAR(127) NULL COMMENT 'qq登录id' AFTER `faceBookId`; 
+DROP TABLE `shop-webcast`.`tb_advert`; 
+ALTER TABLE `shop-webcast`.`shop_goods` DROP COLUMN `image2`, DROP COLUMN `image3`, DROP COLUMN `image4`, DROP COLUMN `image5`, CHANGE `image1` `image` TEXT CHARSET utf8 COLLATE utf8_general_ci NULL; 
+ALTER TABLE `shop-webcast`.`tb_img` CHANGE `type` `type` INT(1) DEFAULT 0 NOT NULL COMMENT '0默认 1商品详情图 2广告 3商品主图'; 
+ALTER TABLE `shop-webcast`.`shop_goods` DROP COLUMN `image`; 
+
+2019年6月29日 17:28:28
+ALTER TABLE `shop-webcast`.`shop_sku` ADD COLUMN `name` VARCHAR(255) NULL COMMENT '规格对应名称' AFTER `state`; 
+
+2019年7月1日 10:42:43
+ALTER TABLE `shop-webcast`.`shop_goods` ADD COLUMN `roomId` INT(11) NULL COMMENT '关联直播间id' AFTER `updateTime`; 
+ALTER TABLE `shop-webcast`.`shop_goods` DROP COLUMN `columnId`; 
+ALTER TABLE `shop-webcast`.`shop_goods` ADD COLUMN `resalePrice` DECIMAL(11,2) NULL COMMENT '转售价格' AFTER `oldPrice`; 
+ALTER TABLE `shop-webcast`.`shop_goods` ADD COLUMN `del` INT(1) DEFAULT 0 NULL COMMENT '0正常1删除' AFTER `roomId`; 
+ALTER TABLE `shop-webcast`.`tb_no` DROP COLUMN `roomId`; 
+
+2019年7月2日 15:53:01
+ALTER TABLE `shop-webcast`.`shop_goods` ADD COLUMN `type` INT(1) DEFAULT 0 NULL COMMENT '商品类型 0商城 1直播' AFTER `resaleNum`; 
+CREATE TABLE `shop-webcast`.`shop_goods_resale`( `id` INT(11) NOT NULL AUTO_INCREMENT, `goodsId` INT(11), `accountId` INT(11), PRIMARY KEY (`id`) ) ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='用户商品转售表'; 
+
+2019年7月3日 15:18:32
+ALTER TABLE `shop-webcast`.`shop_order` ADD COLUMN `goodsId` INT(11) NULL COMMENT '商品id' AFTER `isDel`; 
+[2019-07-03 19:47:15.517] [000086] [培鑫] [MYSQL]
+ALTER TABLE `tb_account`
+ADD COLUMN `userSig`  varchar(255) NULL COMMENT '云通信用户签名' AFTER `qqId`

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>直播</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .btn{
+      width: 80%;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      border-radius: 20px;
+      background-color: #46C596;
+      font-size:15px;
+      font-family:PingFang-SC-Bold;
+      font-weight:bold;
+      color:#fff;
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      margin:  0 auto;
+      z-index: 99;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="video" style="width: 100%;height: 100vh"></div>
+  <button class="btn">下载app</button>
+  <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://imgcache.qq.com/open/qcloud/video/vcplayer/TcPlayer-2.3.0.js"></script>
+  <script>
+    function  getUrlKey(name) {
+      return (
+        decodeURIComponent(
+          (new RegExp("[?|&]" + name + "=" + "([^&;]+?)(&|#|;|$)").exec(
+            location.href
+          ) || [, ""])[1].replace(/\+/g, "%20")
+        ) || null
+      );
+    }
+
+    $.ajax({
+    type: "POST",
+    url: 'http://114.55.167.83/shop-webcast/api/room/selectPlayUrl',
+    data:{roomId: getUrlKey('roomId')},
+    success: function(res){
+      if(res.code == 1){
+        window.tcplayer = new TcPlayer("video", {
+          m3u8: res.data.playUrl+'.m3u8', //请替换成实际可用的播放地址
+          autoplay: true, //iOS下safari浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
+          width: "100%", //视频的显示宽度，请尽量使用视频分辨率宽度
+          height: "100%" //视频的显示高度，请尽量使用视频分辨率高度
+        });
+      }
+    }
+  });
+  </script>
+</body>
+</html>

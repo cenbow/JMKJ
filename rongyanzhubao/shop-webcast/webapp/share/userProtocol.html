@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>用户协议</title>
+  <link rel="stylesheet" href="./css/init.css" />
+  <style media="screen">
+    #container{
+      padding: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+
+  </div>
+</body>
+<script src="./js/url.js"></script>
+<script src="./js/axios.js"></script>
+<script type="text/javascript">
+  window.onload = function(){
+    axios.defaults.baseURL = baseUrl;
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    axios.post('/api/content/get',
+      new URLSearchParams({id: 3})
+    ).then(function(res) {
+      <!-- console.log(res.data, '用户协议'); -->
+      if(res.data.code == 1){
+        var div = document.getElementById('container')
+        div.innerHTML = res.data.data.content
+      }
+    })
+  }
+</script>
+</html>

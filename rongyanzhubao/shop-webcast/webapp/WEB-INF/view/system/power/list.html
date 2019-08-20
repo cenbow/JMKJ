@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>菜单列表</title> 
+#include("/WEB-INF/view/system/_common/meta.html")
+</head>
+<body>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<div class="layui-card-body layui-form">
+						<form class="layui-form" id="tf" class="layui-table-body">
+							<table class="layui-hide" id="auth-table" lay-filter="auth-table" >
+								<input type="hidden" name="roleId" value="#(roleId)">
+								<div class="layui-btn-group">
+							        <input style="width: 125px" class="layui-btn" id="btn-expand" value="全部展开" >
+							        <input style="width: 125px" class="layui-btn" id="btn-fold" value="全部折叠" >
+							        <input style="width: 125px" class="layui-btn" id="btn-refresh" value="刷新表格">
+							    </div>
+							</table>
+							<div class="layui-form-item">
+								<div style="text-align:center">
+									<hr>
+									<input class="layui-btn" style="width: 75px" lay-filter="submitFrom" id="submitFrom" value="提交">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+		layui.config({
+			base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+		}).extend({
+			treetable: 'treetable-lay/powerTreetable'
+		}).use([ 'treetable', 'table' ],function() {
+			var $ = layui.jquery;
+	        var table = layui.table;
+	        var layer = layui.layer;
+	        var treetable = layui.treetable;
+	        var form = layui.form;
+	        // 渲染表格
+	        var renderTable = function () {
+	            layer.load(2);
+	            treetable.render({
+	                treeColIndex: 1,
+	                treeSpid: -1,
+	                treeIdName: 'id',
+	                treePidName: 'parent',
+	                treeDefaultClose: true,
+	                treeLinkage: false,
+	                toolbar: true,
+	                elem: '#auth-table',
+	                url: '#(ctx)/system/role/power/getMenuList?roleId=#(roleId)',
+	                page: false,
+	                cols: [[
+	                    {type: 'numbers'},
+	                    {field: 'id', title: 'id'},
+	                    {field: 'name', title: '菜单名称',edit: 'text'},
+	                    {fixed: 'right', title:'操作',width:125}
+	                ]],
+	                done: function (res, curr, count) {
+	                    layer.closeAll('loading');
+	                }
+	            });
+	        };
+	        
+	        renderTable();
+		    $('.layui-btn.LAY-menu-add').on('click', function(){
+			      var type = $(this).data('type');
+			      active[type] ? active[type].call(this) : '';
+			  });
+		    
+	        $('#submitFrom').on('click',function(){
+				var field = $("#tf").serialize();
+				$.ajax({
+					type : 'post',
+					url : "#(ctx)/system/role/power/update",
+					data : field,
+					async : true,
+					success : function(data) {
+						renderTable();
+						parent.layer.msg(data.desc,{offset:'80%'});
+						layer.closeAll('loading');
+					}
+				});
+	        });
+		    
+	        $('#btn-expand').click(function () {
+	            treetable.expandAll('#auth-table');
+	        });
+
+	        $('#btn-fold').click(function () {
+	            treetable.foldAll('#auth-table');
+	        });
+
+	        $('#btn-refresh').click(function () {
+	            renderTable();
+	        });
+	        
+		});
+		
+	</script>
+
+</body>
+</html>

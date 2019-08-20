@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>后台管理系统|广州小跑软件科技有限公司</title>
+
+#include("/WEB-INF/view/system/_common/meta.html")
+
+</head>
+<body class="layui-layout-body">
+
+	<div id="LAY_app">
+		<div class="layui-layout layui-layout-admin">
+
+			#include("_common/header.html")
+
+			<!-- 侧边菜单 -->
+			<div class="layui-side layui-side-menu" id="LAY-system-side-menu" >
+				<div class="layui-side-scroll">
+					<div class="layui-logo" >
+						<span>电商直播</span>
+					</div>
+				</div>
+			</div> 
+			<!-- 页面标签 -->
+			<div class="layadmin-pagetabs" id="LAY_app_tabs">
+				<div class="layui-icon layadmin-tabs-control layui-icon-prev"
+					layadmin-event="leftPage"></div>
+				<div class="layui-icon layadmin-tabs-control layui-icon-next"
+					layadmin-event="rightPage"></div>
+				<div class="layui-icon layadmin-tabs-control layui-icon-down">
+					<ul class="layui-nav layadmin-tabs-select"
+						lay-filter="layadmin-pagetabs-nav">
+						<li class="layui-nav-item" lay-unselect><a
+							href="javascript:;"></a>
+							<dl class="layui-nav-child layui-anim-fadein">
+								<dd layadmin-event="closeThisTabs">
+									<a href="javascript:;">关闭当前标签页</a>
+								</dd>
+								<dd layadmin-event="closeOtherTabs">
+									<a href="javascript:;">关闭其它标签页</a>
+								</dd>
+								<dd layadmin-event="closeAllTabs">
+									<a href="javascript:;">关闭全部标签页</a>
+								</dd>
+							</dl></li>
+					</ul>
+				</div>
+				<div class="layui-tab" lay-unauto lay-allowClose="true"
+					lay-filter="layadmin-layout-tabs">
+					<ul class="layui-tab-title" id="LAY_app_tabsheader">
+						<li lay-id="#(ctx)/system/console"
+							lay-attr="#(ctx)/system/console"
+							class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+					</ul>
+				</div>
+			</div>
+
+
+			<!-- 主体内容 -->
+			<div class="layui-body" id="LAY_app_body">
+				<div class="layadmin-tabsbody-item layui-show">
+					<iframe src="#(ctx)/system/console"
+						frameborder="0" class="layadmin-iframe"></iframe>
+				</div>
+			</div>
+
+			<!-- 辅助元素，一般用于移动设备下遮罩 -->
+			<div class="layadmin-body-shade" layadmin-event="shade"></div>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	<script>
+
+	layui.config({
+		base : '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+	}).extend({
+		index : 'lib/index' //主入口模块
+	}).use([ 'index', 'set' ]);
+	</script>
+	<script>
+	$(function(){
+		var url = "#(ctx)/system/menu/selectMenu";
+		$.ajax({  
+          type : 'post',  
+          url :  url,
+          async : false,  
+          success : function(data){ 
+        	 var menuList = data.data;
+        	 var side = $(".layui-side-scroll");
+        	 getLayUiAdminMenu(menuList,side);
+          }
+		}) 
+	})
+	
+	function getLayUiAdminMenu(menuList,parent){
+		var isParant = menuList[0].parent === -1;
+		
+		ulContent = isParant ?'<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu"></ul>':'<dl class="layui-nav-child"></dl>';
+		parent.append(ulContent);
+		
+		var ul = isParant ? parent.children("ul") : parent.children("dl");
+		for(var i=0 ;i<menuList.length;i++){
+			var menu = menuList[i];
+			var icon = menu.icon;
+			var url  = (menu.url == null || menu.url == "")? "<a href='javascript:;'>" : "<a lay-href='#(ctx)"+menu.url+"'>";
+			var onclickFunction = menu.url == null || menu.url === ""?"":`onclick="addStyle(this)"`;
+			var title = menu.name;
+			var children = menu.children;
+			var icon =  menu.icon == null || menu.icon == '' ? '':'<i class="layui-icon">'+menu.icon+'</i>';
+			var liContent = isParant ? '<li data-name="'+title+'" class="layui-nav-item">'+url+icon+'<cite>'+title+'</cite></li>' : '<dd data-name="'+title+'" ' + onclickFunction + ' >'+url+icon+title+'</a></dd>';
+			
+			ul.append(liContent);
+			if(children != null && children.length > 0){
+				var li = isParant? ul.children("li:eq("+i+")") : ul.children("dd:eq("+i+")")
+				getLayUiAdminMenu(children,li);
+			}
+		}
+	}
+	function addStyle(dd){
+		$(".layui-bg-green").removeAttr("class");
+		$(dd).attr("class","layui-bg-green");
+	}
+	</script>
+ 
+
+</body>
+</html>
+
+

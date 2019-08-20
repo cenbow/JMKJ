@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="goods.id" value="#(goods.id)" />
+	#-- <input type="hidden" name="goods.userId" value="#(account.id)" />
+	<input type="hidden" name="goods.accountType" value="#(account.type)" /> --#
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div id="detailImageIds" hidden></div>
+	<div id="goodsImageIds" hidden></div>
+	<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+	  <ul class="layui-tab-title">
+	    <li class="layui-this">基本参数</li>
+	    <li>规格参数</li>
+	  </ul>
+	  <div class="layui-tab-content" style="height: 100%;">
+	    <div class="layui-tab-item layui-show">
+	    	
+	    	<div class="layui-form-item">
+				<label class="layui-form-label">商品款式</label>
+				<div class="layui-input-block">
+					<select name="goods.labelId"> 
+						#if(parentlabel != null)
+							<option value="#(parentlabel.id)" disabled>#(parentlabel.name)</option>
+						#end 
+						#for(obj1 : labelList)
+							<option value="#(obj1.id)" disabled>#(obj1.name)</option> 
+							#for(obj2 : obj1.nextList)
+								<option value="#(obj2.id)">&nbsp;&nbsp;&nbsp;&nbsp;#(obj2.name)</option>
+							#end 
+						#end
+					</select>
+				</div>
+			</div>
+	    	<div class="layui-form-item">
+				<label class="layui-form-label">所属商家</label>
+				<div class="layui-input-block">
+					<select name="goods.userId"> 
+						#for(obj1 : accountList)
+							<option value="#(obj1.id)" #if(obj1.id == goods.userId) selected #end>#(obj1.nick??'未命名')</option> 
+						#end
+					</select>
+				</div>
+			</div>
+	    	<div class="layui-form-item">
+				<label class="layui-form-label">所属栏目</label>
+				<div class="layui-input-block">
+					<select name="columnId"> 
+						#for(obj1 : columnList)
+							<option value="#(obj1.id)" #if(column != null && obj1.id == column.labelId) selected #end>#(obj1.name)</option> 
+						#end
+					</select>
+				</div>
+			</div>
+	    	<div class="layui-form-item">
+				<label class="layui-form-label">所属直播间</label>
+				<div class="layui-input-block">
+					<select name="goods.roomId"> 
+						#for(obj : roomList)
+							<option value="#(obj.id)" #if(obj.id == goods.roomId) selected #end>#(obj.name)</option> 
+						#end
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">商品名称</label>
+				<div class="layui-input-block">
+					<input type="text" name="goods.name" value="#(goods.name)"
+						lay-verify="title" autocomplete="off" placeholder="请输入商品名称"
+						class="layui-input" datatype="*2-200">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">货号</label>
+				<div class="layui-input-block">
+					<input type="text" name="goods.artNo" value="#(goods.artNo)"
+						lay-verify="title" autocomplete="off" placeholder="请输入商品名称"
+						class="layui-input" datatype="*2-200">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">视频</label>
+				<div class="layui-input-block">
+					<div >
+						<div >
+							<video id="video" src="#(goods.video)" controls="controls" width="200px" height="150px"></video>
+							<input value="#(ctx)/assets/img/no.png" name="goods.video" id="goodsVideoName" type="hidden">
+						</div>
+						<div>
+							<button type="button" class="layui-btn" id="videoFile">
+							  <i class="layui-icon">&#xe67c;</i>上传视频
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">商品缩略图</label>
+				<div class="layui-input-block">
+					<div class="fileinput fileinput-new" data-provides="fileinput">
+						<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+							<img #if(goods.thumbnail !=null) src="#(goods.thumbnail)"
+						#else src="#(ctx)/assets/img/no.png" #end alt="" />
+						</div>
+						<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+						<div>
+							<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span> <input type="file" name="thumbnail">
+							</span> <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput"> 删除 </a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label">商品主图<button class="layui-btn " type="button" onclick="addImageDiv('goodsImage')">增加图片</button></label>
+				<div class="layui-input-block" id="goodsImage" >
+					#for(image : goodsImageList)
+						<div class="fileinput fileinput-new" data-provides="fileinput">
+							<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+								<img #if(image.image != null) src="#(image.image)"
+							#else src="#(ctx)/assets/img/no.png" #end alt="" />
+							</div>
+							<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+							<div>
+								#if(image.url ==null)<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span><input type="file" name="#(image.id)"></span>#end 
+								<a href="javascript:;" class="btn red" onclick="deleteImageDiv(this, 'goodsImage', '')"> 删除</a>
+								<input type="hidden" name="goodsImages" value="#(image.id)">
+							</div>
+						</div>
+					#end
+				</div>
+			</div>
+	
+			<div class="layui-form-item">
+				<label class="layui-form-label">商品详情图<button class="layui-btn " type="button" onclick="addImageDiv('detailImage')">增加图片</button></label>
+				<div class="layui-input-block" id="detailImage" >
+					#for(image : detailImageList)
+						<div class="fileinput fileinput-new" data-provides="fileinput">
+							<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+								<img #if(image.image !=null) src="#(image.image)"
+							#else src="#(ctx)/assets/img/no.png" #end alt="" />
+							</div>
+							<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+							<div>
+								#if(image.url ==null)<span class="btn default btn-file"> <span class="fileinput-new"> 选择图片 </span> <span class="fileinput-exists"> 改变 </span><input type="file" name="#(image.id)"></span>#end 
+								<a href="javascript:;" class="btn red" onclick="deleteImageDiv(this, 'detailImage', '')"> 删除</a>
+								<input type="hidden" name="detailImages" value="#(image.id)">
+							</div>
+						</div>
+					#end
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<div class="layui-inline">
+					<label class="layui-form-label">商品价格</label>
+					<div class="layui-input-inline">
+						<input type="text" name="goods.price" value="#(goods.price)"
+							lay-verify="title" autocomplete="off" placeholder="请输入商品价格"
+							class="layui-input" datatype="/^(:?(:?\d+.\d+)|(:?\d+))$/">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">旧价格</label>
+					<div class="layui-input-inline">
+						<input type="text" name="goods.oldPrice" value="#(goods.oldPrice)"
+							lay-verify="title" autocomplete="off" placeholder="请输入商品旧价格"
+							class="layui-input" datatype="/^(:?(:?\d+.\d+)|(:?\d+))$/">
+					</div>
+				</div>
+				<div class="layui-inline">
+					<label class="layui-form-label">转售价格</label>
+					<div class="layui-input-inline">
+						<input type="text" name="goods.resalePrice" value="#(goods.resalePrice)"
+							lay-verify="title" autocomplete="off" placeholder="请输入商品转售价格"
+							class="layui-input" datatype="/^(:?(:?\d+.\d+)|(:?\d+))$/">
+					</div>
+				</div>
+				<div class="layui-inline" hidden>
+					<label class="layui-form-label">库存数</label>
+					<div class="layui-input-inline">
+						<input type="number" name="goods.stock" value="#(goods.stock,1)"
+							lay-verify="title" autocomplete="off" placeholder="请输入库存数"
+							class="layui-input" datatype="*">
+					</div>
+				</div>
+				
+				
+				<div class="layui-inline">
+					<label class="layui-form-label">商品状态</label>
+					<div class="layui-input-block">
+				      <input style="border-radius: 20px!important;" lay-filter="goodsState" type="checkbox" lay-skin="switch" value="1" lay-text="上架|下架" #if(goods.state == 0)checked#end>
+				      <input type="hidden" id="goodsState" name="goods.state" value="#(goods.state ?? 1)" />
+				    </div>
+				</div>
+			</div>
+			#-- <div class="layui-form-item" >
+				<label class="layui-form-label">商品详情h5</label>
+				<div class="layui-input-block">
+					<script id="ueditor" type="text/plain" style="width: 100%; height: 300px;" name="goods.content" datatype="*1-200">#(goods.content)</script>
+				</div>
+			</div> --#
+	    
+	    </div>
+	    
+	    <!-- 规格参数 -->
+	    <div class="layui-tab-item">
+	    	#include("/WEB-INF/view/system/shop/goods/spec.html")
+	    	#-- #include("/WEB-INF/view/system/shop/goods/parameter.html") --#
+	    </div>
+	  </div>
+	</div> 
+	
+</body>
+</html>

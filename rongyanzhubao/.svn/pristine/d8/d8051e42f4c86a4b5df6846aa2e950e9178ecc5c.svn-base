@@ -1,0 +1,30 @@
+# ${classDescription}
+>##  <font face='微软雅黑' color='red' size='4'>${methodDescription}</font>
+
+>**请求URL：** 
+- **<font face='微软雅黑' color='blue' size=4>${url}</font>**
+
+
+
+>**请求方式：**
+- ${requestMethod} 
+
+>**参数：** 
+
+${param}
+
+
+> **返回示例**
+
+>     
+>            ${result}
+>     
+
+> **返回参数说明** 
+
+${pDesc}
+
+
+> **备注** 
+
+>- 更多返回错误代码请看首页的错误代码描述

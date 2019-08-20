@@ -1,0 +1,57 @@
+
+<input type="hidden" name="label.id" value="#(label.id)" />
+<input type="hidden" name="mToken" value="#(mToken)" />
+<div class="layui-form-item">
+	<label class="layui-form-label">父文章分类</label>
+	<div class="layui-input-block">
+		<select name="label.parent"> #if(parentlabel != null)
+			<option value="#(parentlabel.id)">#(parentlabel.name)</option> #end
+			<option value="-1">顶级文章分类</option> #for(obj1 : labelList)
+			<option value="#(obj1.id)">#(obj1.name)</option>
+			<!-- #for(obj2 : obj1.nextList)
+					<option value="#(obj2.id)">&nbsp;&nbsp;&nbsp;&nbsp;#(obj2.name)</option>
+					#end --> #end
+		</select>
+	</div>
+</div>
+<div class="layui-form-item">
+	<label class="layui-form-label">名称</label>
+	<div class="layui-input-block">
+		<input type="text" name="label.name" value="#(label.name)"
+			vlay-verify="title" autocomplete="off" placeholder="请输入标题"
+			class="layui-input" datatype="*2-100" errormsg="昵称至少6个字符,最多18个字符！">
+	</div>
+</div>
+<div class="layui-form-item">
+	<div class="layui-inline">
+		<label class="layui-form-label">排序</label>
+		<div class="layui-input-block">
+			<input type="text" name="label.sort" value="#(label.sort ?? 0)"
+				lay-verify="title" autocomplete="off" placeholder="请输入排序"
+				class="layui-input" datatype="*1-100">
+		</div>
+	</div>
+</div>
+<div class="layui-form-item">
+		<label class="layui-form-label" style="width: 100px;">图标</label>
+		<div class="layui-input-block">
+			<div class="fileinput fileinput-new" data-provides="fileinput">
+					<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+						<img #if(label.image != null) src="#(ctx)#(label.image)" #else src="#(ctx)/assets/img/no.png" #end alt="" /> </div>
+					<div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
+					<div>
+						<span class="btn default btn-file">
+							<span class="fileinput-new">选择图片</span><span class="fileinput-exists">更改</span><input type="file" name="image"> 
+						</span>
+						<a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput">删除</a>
+					</div>
+				</div>
+		</div>
+	</div>
+<div class="layui-form-item">
+	<label class="layui-form-label">描述</label>
+	<div class="layui-input-block">
+		<textarea name="label.desc" value="#(label.desc)" placeholder="请输入描述"
+			class="layui-textarea"></textarea>
+	</div>
+</div>

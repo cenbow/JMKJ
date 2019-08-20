@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	#for(param : paramList)
+		<div class="layui-form-item">
+			<label class="layui-form-label">#(param.name)</label>
+			<div class="layui-input-block">
+				<textarea rows="2" cols="90%" name="paramValues">#(param.value)</textarea>
+				<input name="paramIds" value="#(param.id)" hidden>
+			</div>
+		</div>
+	#end
+</body>
+</html>

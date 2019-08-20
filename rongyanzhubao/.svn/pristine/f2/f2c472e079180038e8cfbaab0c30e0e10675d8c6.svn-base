@@ -1,0 +1,58 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>layuiAdmin 角色管理 iframe 框</title>
+	#include("/WEB-INF/view/system/_common/meta.html")
+	#set(curl = ctx+"/system/shop/order")
+</head>
+<body>
+
+	<div class="layui-form" lay-filter="layuiadmin-form-order"
+		id="layuiadmin-form-order" style="padding: 20px 30px 0 0;">
+		#(token)
+		<input type="hidden" name="orderId" value= "#(orderId ?? )" class="layui-input">
+		
+		<!-- <div class="layui-form-item">
+			<label class="layui-form-label">快递类型</label>
+			<div class="layui-input-inline">
+			   <select id="logisticsType" name="logistics.type">
+			   		<option value='0'>顺丰</option>
+			   		<option value='1'>申通</option>
+			   		<option value='2'>韵达</option>
+			   		<option value='3'>百世</option>
+			   		<option value='4'>邮政</option>
+	        	</select>
+			</div>
+	    </div> -->
+		
+		<div class="layui-form-item">
+			<label class="layui-form-label">物流单号</label>
+				<div class="layui-input-inline">
+				<input type="text" name="logisticsNo" value="" lay-verify="required"
+					placeholder="请输物流单号" autocomplete="off" class="layui-input">
+				</div>
+		</div>
+		
+		<div class="layui-form-item layui-hide">
+			<button class="layui-btn" lay-submit
+				lay-filter="LAY-delivery-submit" id="LAY-delivery-submit">提交</button>
+		</div>
+	</div>
+
+	#include("/WEB-INF/view/system/_common/js.html")
+	
+	<script>
+	  layui.config({
+	    base: '#(ctx)/assets/layuiadmin/' //静态资源所在路径
+	  }).extend({
+	    index: 'lib/index' //主入口模块
+	  }).use(['index', 'form'], function(){
+	    var $ = layui.$
+	    ,form = layui.form ;
+	  })
+  </script>
+</body>
+</html>

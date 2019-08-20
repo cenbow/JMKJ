@@ -1,0 +1,21 @@
+
+<div class="layui-card-header">版本信息</div>
+<div class="layui-card-body layui-text layadmin-about">
+	<div class="layui-btn-container">
+		<a href="http://www.layui.com/admin/" target="_blank"
+			class="layui-btn layui-btn-danger">获取授权</a> <a
+			href="http://fly.layui.com/download/layuiAdmin/" target="_blank"
+			class="layui-btn">下载新版</a>
+	</div>
+</div>
+
+<div class="layui-card-header">关于版权</div>
+<div class="layui-card-body layui-text layadmin-about">
+
+	<blockquote class="layui-elem-quote" style="border: none;">
+		国家计算机软件著作权保护。
+	</blockquote>
+	<p>
+		© 2018 <a href="http://www.xiaopaotec.com/">xiaopaotec.com</a> 版权所有
+	</p>
+</div>

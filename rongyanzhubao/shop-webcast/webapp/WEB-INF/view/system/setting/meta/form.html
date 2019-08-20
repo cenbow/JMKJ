@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="hidden" name="meta.id" value="#(meta.id)" />
+	<input type="hidden" name="mToken" value="#(mToken)" />
+	<div class="layui-form-item">
+		<label class="layui-form-label">元数据类型</label>
+		<div class="layui-input-block">
+			<select name="meta.metaTypeId">
+				<option value="#(metaType.id)">#(metaType.name)</option> 
+				#for(mt : metaTypeList)
+				<option value="#(mt.id)">#(mt.name)</option> 
+				#end
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">key</label>
+		<div class="layui-input-block">
+			<input type="text" name="meta.key" value="#(meta.key)"
+				lay-verify="title" autocomplete="off" placeholder="请输入key"
+				class="layui-input" datatype="*2-200">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">value</label>
+		<div class="layui-input-block">
+			<script id="ueditor" type="text/plain" style="width: 100%; height: 300px;" name="meta.value" datatype="*1-200">#(meta.value)</script>
+		</div>
+	</div>
+</body>
+</html>

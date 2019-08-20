@@ -1,0 +1,52 @@
+
+<input type="hidden" name="mToken" value="#(mToken)" />
+<input type="hidden" name="roleId" value="#(roleId)" />
+<table class="layui-table" id="table-data">
+	<colgroup>
+		<col width="10">
+		<col width="50">
+		<col width="150">
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+	</colgroup>
+	<tbody>
+		#for(menu : data.menuList)
+		<tr>
+			<td width="150px"><input type="checkbox" lay-skin="primary"
+				class="checkboxes#(menu.id)" name="ids1" value="#(menu.id)"
+				#if(menu.flag) checked="checked" #end />&nbsp;#(menu.name)</td>
+		</tr>
+
+		#if(menu.nextList != null) #for(menu1 : menu.nextList)
+		<tr class="odd gradeX">
+			<td></td>
+			<td width="150px"><input type="checkbox" lay-skin="primary"
+				class="checkboxes#(menu.id)#(menu1.id)" name="ids1"
+				value="#(menu1.id)" #if(menu1.flag) checked="checked" #end />&nbsp;#(menu1.name)</td>
+		</tr>
+		#if(menu1.nextList != null) #for(menu2 : menu1.nextList)
+		<tr class="odd gradeX">
+			<td></td>
+			<td></td>
+			<td width="150px"><input type="checkbox" lay-skin="primary"
+				class="checkboxes#(menu.id)#(menu1.id)#(menu2.id)" name="ids1"
+				value="#(menu2.id)" #if(menu2.flag) checked="checked" #end />&nbsp;#(menu2.name)</td>
+			<td>#if(menu2.powers != null) #for(power : menu2.powers) <input
+				type="checkbox" lay-skin="primary"
+				class="checkboxes#(menu.id)#(menu1.id)#(menu2.id)#(power.id)"
+				name="ids2" value="#(power.menuPowerId)_#(menu2.id)_#(power.id)"
+				#if(power.flag) checked="checked"
+				#end 44#(power.name) &nbsp;&nbsp;
+									#end #end</td>
+		</tr>
+		#end #end #end #end #end
+	</tbody>
+</table>
